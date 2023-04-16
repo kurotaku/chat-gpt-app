@@ -32,7 +32,6 @@ const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
       password: data.password,
       callbackUrl: `${window.location.origin}`,
     }).then((res) => {
-      console.log(res);
       if (res?.error) {
         setError("Email,Passwordを正しく入力してください");
       } else {

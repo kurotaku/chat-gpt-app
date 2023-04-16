@@ -5,6 +5,7 @@ import { faker } from '@faker-js/faker';
 const prisma = new PrismaClient()
 
 async function main() {
+  // User
   await prisma.user.create({
     data: {
       name: 'テストユーザー',
@@ -29,6 +30,19 @@ async function main() {
         name: name,
         email: email,
         password: password,
+      },
+    })
+  }
+
+  faker.locale = "ja";
+  // Children
+  for (let i = 0; i < 10; i++) {
+    const familyName = faker.name.lastName();
+    const firstName = faker.name.firstName();
+    const name = familyName + ' ' + firstName;
+    await prisma.child.create({
+      data: {
+        name: name,
       },
     })
   }
