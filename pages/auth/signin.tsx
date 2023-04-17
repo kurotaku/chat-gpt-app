@@ -3,6 +3,10 @@ import { getCsrfToken, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { CtxOrReq } from "next-auth/client/_utils";
 import { useForm } from "react-hook-form";
+import ErrorMessage from "../../components/form/ErrorMessage";
+import { Btn } from "../../components/button/Button";
+import { TextField } from "../../components/form/Input";
+
 var md5 = require("md5");
 
 // POSTリクエスト（サインイン・サインアウトなど）に必要なCSRFトークンを返却する
@@ -46,25 +50,25 @@ const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
       <form onSubmit={handleSubmit(signInUser)}>
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
         <div style={{ marginTop: "15px" }}>
-          <input
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <TextField
+            {...register("email")}
             type="text"
             placeholder="Email"
-            {...register("email")}
-          ></input>
+            className="border-gray-200 focus:outline-none focus:border-cyan-600 mb-2"
+          ></TextField>
         </div>
         <div>
           <label htmlFor="password"></label>
-          <input
+          <TextField
+            {...register("password")}
             type="password"
             placeholder="Password"
-            {...register("password")}
-          ></input>
+            className="border-gray-200 focus:outline-none focus:border-cyan-600 mb-2"
+          ></TextField>
         </div>
-        <p>
-          <span style={{ color: "red" }}>{error}</span>
-        </p>
         <div>
-          <button type="submit">Sign in</button>
+          <Btn type="submit" className="bg-cyan-900 text-white hover:bg-cyan-950">ログイン</Btn>
         </div>
       </form>
     </div>
