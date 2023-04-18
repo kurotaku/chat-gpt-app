@@ -60,8 +60,6 @@ model Chat {
   userId   Int
   user     User      @relation(fields: [userId], references: [id])
   messages Message[]
-  childId  Int
-  child    Child     @relation(fields: [childId], references: [id])
 }
 
 model Message {
@@ -73,12 +71,4 @@ model Message {
   user      User     @relation(fields: [userId], references: [id])
   chatId    Int
   chat      Chat     @relation(fields: [chatId], references: [id])
-}
-
-model Child {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  chats     Chat[]
 }

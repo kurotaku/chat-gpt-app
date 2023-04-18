@@ -33,19 +33,6 @@ async function main() {
       },
     })
   }
-
-  faker.locale = "ja";
-  // Children
-  for (let i = 0; i < 10; i++) {
-    const familyName = faker.name.lastName();
-    const firstName = faker.name.firstName();
-    const name = familyName + ' ' + firstName;
-    await prisma.child.create({
-      data: {
-        name: name,
-      },
-    })
-  }
 }
 
 main()
