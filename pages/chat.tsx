@@ -11,7 +11,7 @@ function autosize(textarea) {
   textarea.style.height = textarea.scrollHeight + 4 + 'px';
 }
 
-const ChatPage = () => {
+const ChatUI = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setLoading] = useState(false);
@@ -86,4 +86,4 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage;
+export default ChatUI;
