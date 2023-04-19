@@ -47,7 +47,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser }) => {
     try{
       setLoading(true);
 
-      const text: String = message;
+      const inputText: String = message;
 
       setMessage('');
       
@@ -57,31 +57,33 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser }) => {
       
       setMessages((prevMessages) => [
         ...prevMessages,
-        { role: "user", content: text }
+        { role: "user", content: inputText }
       ])
-      const response = await axios.post('/api/chatgpt', { messages: [...messages, { role: "user", content: text }] }, { withCredentials: true });
+      const responce = await axios.post('/api/chatgpt', { messages: [...messages, { role: "user", content: inputText }] }, { withCredentials: true });
 
       setMessages((prevMessages) => [
         ...prevMessages,
-        response.data
+        responce.data
       ]);
 
-      const chatData = {
-        user: currentUser,
-        name: text.slice( 0, 20 ),
-      };
+      let currentChatId: Number = chatId;
 
       if(messages.length == 0){
+        const chatData = {
+          name: inputText.slice( 0, 20 ),
+        };
         await axios.get('/api/chats');
         const createChat = await axios.post('/api/chats', 
-        {
-          name: message.slice(0, 20),
-        }, {
-          withCredentials: true,
-        });
+                                  chatData,
+                                  {withCredentials: true}
+                                );
         setChatId(createChat.data.id);
+        currentChatId = createChat.data.id;
         console.log(chatId || createChat.data.id);
       }
+
+      await axios.post('/api/messages', {role: "user", content: inputText, chatId: currentChatId}, { withCredentials: true });
+      await axios.post('/api/messages', {...responce.data, chatId: currentChatId}, { withCredentials: true });
       
       setLoading(false);
       reset();

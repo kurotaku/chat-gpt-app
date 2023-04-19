@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth/next"
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default async function handle(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -26,8 +26,8 @@ export default async function handle(
         data: {
           role,
           content,
-          userId: user.id,
           chatId,
+          userId: user.id,
         },
       });
       res.status(200).json(message);
