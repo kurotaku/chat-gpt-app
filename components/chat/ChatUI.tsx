@@ -1,12 +1,10 @@
 import { useEffect, useState, useRef, ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSession } from "next-auth/react"
 import axios from 'axios';
-import Message from '../components/chat/Message';
-import { Btn } from '../components/button/Button';
-import { TextArea } from '../components/form/Input';
-import Roading from '../components/form/Roading';
-import fetchCurrentUser from '../utils/fetchCurrentUser';
+import Message from './Message';
+import { Btn } from '../button/Button';
+import { TextArea } from '../form/Input';
+import Roading from '../form/Roading';
 
 function autosize(textarea) {
   textarea.style.height = 'auto';
@@ -18,9 +16,6 @@ interface ChatUIProps {
 }
 
 const ChatUI: React.FC<ChatUIProps> = ({ currentUser }) => {
-  const { data: session } = useSession()
-  const [user, setUser] = useState(null);
-  const [chatId, setChatId] = useState(null);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setLoading] = useState(false);
@@ -33,15 +28,6 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser }) => {
       handleSubmit(onSubmit)();
     }
   };
-
-  useEffect(() => {
-    const getUser = async () => {
-      const currentUser = await fetchCurrentUser(session);
-      setUser(currentUser);
-    };
-  
-    getUser();
-  }, [session]);
 
   const onSubmit = async (data) => {
     try{
@@ -59,7 +45,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser }) => {
         ...prevMessages,
         { role: "user", content: text }
       ])
-      const response = await axios.post('/api/chatgpt', { messages: [...messages, { role: "user", content: text }] }, { withCredentials: true });
+      const response = await axios.post('/api/chatgpt', { messages: [...messages, { role: "user", content: text }] });
 
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -70,18 +56,12 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser }) => {
         user: currentUser,
         name: text.slice( 0, 20 ),
       };
-
-      if(messages.length == 0){
-        await axios.get('/api/chats');
-        const createChat = await axios.post('/api/chats', 
-        {
-          name: message.slice(0, 20),
-        }, {
-          withCredentials: true,
-        });
-        setChatId(createChat.data.id);
-        console.log(chatId || createChat.data.id);
-      }
+      await axios.get('/api/users/current-user');
+      await axios.post("/api/chats", chatData), {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      };
       
       setLoading(false);
       reset();
@@ -92,7 +72,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser }) => {
 
   return (
     <div>
-      {messages.length == 0 && <h1 className="text-center font-medium">{user?.name}さん。ChatGPTに質問してください</h1>}
+      {messages.length == 0 && <h1 className="text-center font-medium">{currentUser.name}さん。ChatGPTに質問してください</h1>}
       <div className="mb-6">
         {messages.map((message, index) => (
           <Message key={index} message={message.content} role={message.role} />

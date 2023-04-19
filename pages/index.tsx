@@ -1,13 +1,24 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Layout from '../components/Layout'
 import { useSession } from "next-auth/react"
-import ChatUI from './chat'
+import Layout from '../components/Layout'
+import ChatUI from '../components/chat/ChatUI'
 import Modal from '../components/modal/Modal'
+import fetchCurrentUser from '../utils/fetchCurrentUser';
 
 const IndexPage = () => {
   const { data: session } = useSession()
+  const [user, setUser] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const currentUser = await fetchCurrentUser(session);
+      setUser(currentUser);
+    };
+
+    getUser();
+  }, [session]);
 
   const toggleModal = e => {
     if (e.target === e.currentTarget) {
@@ -19,7 +30,7 @@ const IndexPage = () => {
   
   return(
     <Layout title="Home | Next.js + TypeScript Example">
-      <h1>Hello Next.js 👋</h1>
+      <h1>Hello {user?.name} 👋</h1>
       <p>{msg}</p>
       <p>
         <Link href="/about">About</Link>
@@ -31,7 +42,7 @@ const IndexPage = () => {
       {isOpenModal && (
         <Modal close={toggleModal}>
           <div className="pb-4">
-            <ChatUI />
+            <ChatUI currentUser={user} />
           </div>
         </Modal>
       )}
