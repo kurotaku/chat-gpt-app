@@ -21,7 +21,7 @@ interface ChatUIProps {
 
 const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) => {
   const { data: session } = useSession()
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(currentUser);
   const [currentChatId, setCurrentChatId] = useState(chatId);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
@@ -38,10 +38,10 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
 
   useEffect(() => {
     const getUser = async () => {
-      const currentUser = await fetchCurrentUser(session);
-      setUser(currentUser);
+      const fetchedUser = await fetchCurrentUser(session);
+      setUser(fetchedUser);
     };
-    getUser();
+    user || getUser();
 
     const fetchMessages = async () => {
       const response = await axios.get(`/api/messages/${chatId}`);

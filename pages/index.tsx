@@ -54,10 +54,10 @@ const IndexPage = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const currentUser = await fetchCurrentUser(session);
-      setUser(currentUser);
+      const fetchedUser = await fetchCurrentUser(session);
+      setUser(fetchedUser);
     };
-    user || getUser();
+    getUser();
 
     fetchChats();
   }, [session]);
