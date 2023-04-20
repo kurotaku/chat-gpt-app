@@ -49,7 +49,8 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
         return {
           role: data.role,
           content: data.content,
-          userName: data.user.name
+          userName: data.user.name,
+          createdAt: data.createdAt
         };
       });
       setMessages(newArray);
@@ -116,7 +117,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
       {messages.length == 0 && <h1 className="text-center font-medium">{user?.name}さん。ChatGPTに質問してください</h1>}
       <div className="mb-6">
         {messages.map((message, index) => (
-          <Message key={index} message={message.content} role={message.role} userName={message.userName || user.name} />
+          <Message key={index} message={message.content} role={message.role} userName={message.userName || user.name} saved={!!message.createdAt}/>
         ))}
       </div>
       
