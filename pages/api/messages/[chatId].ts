@@ -8,6 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const chatId = req.query.chatId as string;
   const session = await getServerSession(req, res, authOptions)
 
   const user = await prisma.user.findUnique({
@@ -22,17 +23,17 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       const messages = await prisma.message.findMany({
-        where: { userId: user.id },
+        where: { chatId: parseInt(chatId) },
       });
       res.status(200).json(messages);
       break;
     case "POST":
-      const { role, content, chatId } = req.body;
+      const { role, content } = req.body;
       const message = await prisma.message.create({
         data: {
           role,
           content,
-          chatId,
+          chatId: parseInt(chatId),
           userId: user.id,
         },
       });
@@ -41,6 +42,5 @@ export default async function handler(
     default:
       res.status(405).json({ message: "Method not allowed" });
       break;
-    }
   }
-
+}

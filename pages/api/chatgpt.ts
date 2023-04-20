@@ -11,7 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(405).json({ message: 'Method not allowed' });
     return;
   }
-
+  
   try{
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo", // string;

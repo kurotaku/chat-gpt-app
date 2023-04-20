@@ -16,27 +16,33 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     where: { email: session.user.email },
   });
 
-  switch (req.method) {
-    case "GET":
-      const chats = await prisma.chat.findMany();
-      res.status(200).json(chats);
-      break;
-    case "POST":
-      const chat = await prisma.chat.create({
-        data: {
-          name: req.body.name,
-          user: {
-            connect: {
-              id: user.id,
+  try{
+    switch (req.method) {
+      case "GET":
+        const chats = await prisma.chat.findMany();
+        res.status(200).json(chats);
+        break;
+      case "POST":
+        const chat = await prisma.chat.create({
+          data: {
+            name: req.body.name,
+            user: {
+              connect: {
+                id: user.id,
+              },
             },
           },
-        },
-      });
-      res.status(200).json(chat);
-      break;
-    default:
-      res.status(405).json({ message: "Method not allowed" });
-      break;
+        });
+        res.status(200).json(chat);
+        break;
+      default:
+        res.status(405).json({ message: "Method not allowed" });
+        break;
+    }
+  } catch (error) {
+    console.log('Error', error);
+    res.status(500).json(error);
   }
+  
 }
 export default handler;

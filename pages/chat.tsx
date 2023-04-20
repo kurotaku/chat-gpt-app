@@ -15,12 +15,14 @@ function autosize(textarea) {
 
 interface ChatUIProps {
   currentUser: any;
+  chatId: number;
+  onChatUpdated: () => void;
 }
 
-const ChatUI: React.FC<ChatUIProps> = ({ currentUser }) => {
+const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) => {
   const { data: session } = useSession()
   const [user, setUser] = useState(null);
-  const [chatId, setChatId] = useState(null);
+  const [currentChatId, setCurrentChatId] = useState(chatId);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setLoading] = useState(false);
@@ -35,19 +37,33 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser }) => {
   };
 
   useEffect(() => {
+    console.log('chatId', chatId);
     const getUser = async () => {
       const currentUser = await fetchCurrentUser(session);
       setUser(currentUser);
     };
-  
     getUser();
+
+    const fetchMessages = async () => {
+      console.log('chatId', chatId);
+      const response = await axios.get(`/api/messages/${chatId}`);
+      const newArray = response.data.map(data => {
+        return {
+          role: data.role,
+          content: data.content
+        };
+      });
+      setMessages(newArray);
+    }
+    if (chatId) fetchMessages();
   }, [session]);
 
   const onSubmit = async (data) => {
+    console.log('chatId', chatId);
     try{
       setLoading(true);
 
-      const inputText: String = message;
+      const inputText: string = message;
 
       setMessage('');
       
@@ -60,30 +76,35 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser }) => {
         { role: "user", content: inputText }
       ])
       const responce = await axios.post('/api/chatgpt', { messages: [...messages, { role: "user", content: inputText }] }, { withCredentials: true });
-
+      
       setMessages((prevMessages) => [
         ...prevMessages,
         responce.data
       ]);
 
-      let currentChatId: Number = chatId;
+      // 保険としてchatId入れてる
+      let newChatId: number = chatId;
 
+      // 新規Chatの際の処理
       if(messages.length == 0){
         const chatData = {
-          name: inputText.slice( 0, 20 ),
+          name: inputText.slice( 0, 100 ),
         };
-        await axios.get('/api/chats');
         const createChat = await axios.post('/api/chats', 
                                   chatData,
                                   {withCredentials: true}
                                 );
-        setChatId(createChat.data.id);
-        currentChatId = createChat.data.id;
-        console.log(chatId || createChat.data.id);
+        newChatId = createChat.data.id;
+        setCurrentChatId(newChatId);
       }
 
-      await axios.post('/api/messages', {role: "user", content: inputText, chatId: currentChatId}, { withCredentials: true });
-      await axios.post('/api/messages', {...responce.data, chatId: currentChatId}, { withCredentials: true });
+      setCurrentChatId(newChatId);
+      console.log('newChatId', newChatId);
+
+      await axios.post(`/api/messages/${currentChatId || newChatId}`, {role: "user", content: inputText}, { withCredentials: true });
+      await axios.post(`/api/messages/${currentChatId || newChatId}`, {...responce.data}, { withCredentials: true });
+
+      onChatUpdated();
       
       setLoading(false);
       reset();

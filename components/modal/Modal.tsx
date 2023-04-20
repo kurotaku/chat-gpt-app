@@ -16,9 +16,7 @@ const Modal: React.FC<Props> = props => {
             <button type="button" onClick={props.close} />
           </header>
           <div>
-            {React.cloneElement(props.children as any, {
-              close: props.close
-            })}
+            {props.children}
           </div>
         </div>
       </div>
