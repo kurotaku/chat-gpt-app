@@ -1,0 +1,253 @@
+@font-face {
+  font-family: 'icon';
+  src:
+    url('/fonts/icon.ttf?rwtz35') format('truetype'),
+    url('/fonts/icon.woff?rwtz35') format('woff'),
+    url('/fonts/icon.svg?rwtz35#icon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+i {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-close:before {
+  content: "\e900";
+  color: #818585;
+}
+.icon-comment:before {
+  content: "\e901";
+  color: #818585;
+}
+.icon-double_arrow:before {
+  content: "\e902";
+  color: #818585;
+}
+.icon-fill_bag:before {
+  content: "\e903";
+  color: #818585;
+}
+.icon-fill_caution:before {
+  content: "\e904";
+  color: #818585;
+}
+.icon-fill_check:before {
+  content: "\e905";
+  color: #818585;
+}
+.icon-fill_close:before {
+  content: "\e906";
+  color: #818585;
+}
+.icon-fill_fire:before {
+  content: "\e907";
+  color: #818585;
+}
+.icon-fill_information:before {
+  content: "\e908";
+  color: #818585;
+}
+.icon-fill_place:before {
+  content: "\e909";
+  color: #818585;
+}
+.icon-fill_question:before {
+  content: "\e90a";
+  color: #818585;
+}
+.icon-kanban:before {
+  content: "\e90b";
+}
+.icon-left_arrow:before {
+  content: "\e90c";
+  color: #818585;
+}
+.icon-left_bar_arrow:before {
+  content: "\e90d";
+  color: #818585;
+}
+.icon-list:before {
+  content: "\e90e";
+  color: #818585;
+}
+.icon-pen:before {
+  content: "\e90f";
+  color: #818585;
+}
+.icon-plus:before {
+  content: "\e910";
+  color: #818585;
+}
+.icon-print:before {
+  content: "\e911";
+  color: #818585;
+}
+.icon-right_arrow:before {
+  content: "\e912";
+  color: #818585;
+}
+.icon-right_bar_arrow:before {
+  content: "\e913";
+  color: #818585;
+}
+.icon-sign_out:before {
+  content: "\e914";
+  color: #818585;
+}
+.icon-table:before {
+  content: "\e915";
+  color: #818585;
+}
+.icon-todo:before {
+  content: "\e916";
+  color: #818585;
+}
+.icon-top_arrow:before {
+  content: "\e917";
+  color: #818585;
+}
+.icon-trash:before {
+  content: "\e918";
+  color: #818585;
+}
+.icon-tricoron:before {
+  content: "\e919";
+  color: #818585;
+}
+.icon-under_arrow:before {
+  content: "\e91a";
+  color: #818585;
+}
+.icon-alert:before {
+  content: "\e91b";
+  color: #818585;
+}
+.icon-building:before {
+  content: "\e91c";
+  color: #818585;
+}
+.icon-calender:before {
+  content: "\e91d";
+  color: #818585;
+}
+.icon-camera:before {
+  content: "\e91e";
+  color: #818585;
+}
+.icon-circle_check:before {
+  content: "\e91f";
+  color: #818585;
+}
+.icon-circle_user:before {
+  content: "\e920";
+  color: #818585;
+}
+.icon-dashboard:before {
+  content: "\e921";
+  color: #818585;
+}
+.icon-external:before {
+  content: "\e922";
+  color: #818585;
+}
+.icon-filter:before {
+  content: "\e923";
+  color: #818585;
+}
+.icon-government:before {
+  content: "\e924";
+  color: #818585;
+}
+.icon-home:before {
+  content: "\e925";
+  color: #818585;
+}
+.icon-id:before {
+  content: "\e926";
+  color: #818585;
+}
+.icon-invoice:before {
+  content: "\e927";
+  color: #818585;
+}
+.icon-mail:before {
+  content: "\e928";
+  color: #818585;
+}
+.icon-menu:before {
+  content: "\e929";
+  color: #818585;
+}
+.icon-money:before {
+  content: "\e92a";
+  color: #818585;
+}
+.icon-note:before {
+  content: "\e92b";
+  color: #818585;
+}
+.icon-notification:before {
+  content: "\e92c";
+  color: #818585;
+}
+.icon-partner:before {
+  content: "\e92d";
+  color: #818585;
+}
+.icon-password:before {
+  content: "\e92e";
+  color: #818585;
+}
+.icon-people:before {
+  content: "\e92f";
+  color: #818585;
+}
+.icon-phone:before {
+  content: "\e930";
+  color: #818585;
+}
+.icon-place:before {
+  content: "\e931";
+  color: #818585;
+}
+.icon-report:before {
+  content: "\e932";
+  color: #818585;
+}
+.icon-rotate:before {
+  content: "\e933";
+  color: #818585;
+}
+.icon-search:before {
+  content: "\e934";
+  color: #818585;
+}
+.icon-setting:before {
+  content: "\e935";
+  color: #818585;
+}
+.icon-store:before {
+  content: "\e936";
+  color: #818585;
+}
+.icon-track:before {
+  content: "\e937";
+  color: #818585;
+}
+.icon-user:before {
+  content: "\e938";
+  color: #818585;
+}
