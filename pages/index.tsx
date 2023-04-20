@@ -72,7 +72,7 @@ const IndexPage = () => {
   return(
     <Layout title="Home | Next.js + TypeScript Example">
       {chats?.map((chat, index) => (
-        <ChatItem className="bg-slate-100 hover:bg-slate-200 p-6" key={index} onClick={e => toggleModal(e, chat.id)}>
+        <ChatItem className="bg-slate-100 hover:bg-slate-200 p-8" key={index} onClick={e => toggleModal(e, chat.id)}>
           <p className="text-xs text-gray-400 mb-1">{formatDate(chat.createdAt)}</p>
           {chat.name}
         </ChatItem>

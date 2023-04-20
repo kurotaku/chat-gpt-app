@@ -17,12 +17,13 @@ const Badge = styled.div`
 type MessageProps = {
   message: string;
   role: string;
+  userName: string;
 };
 
-const Message = ({ message, role = 'user' }: MessageProps) => {
+const Message = ({ message, role = 'user', userName }: MessageProps) => {
   return (
     <div className={`flex whitespace-pre-line p-6 ${role == 'user' ? 'bg-slate-100' : 'bg-gray-200'}`}>
-      <Badge className={`mr-4 ${role == 'user' ? 'bg-cyan-800' : 'bg-rose-800'}`}>{role == 'user' ? 'YOU' : 'GPT'}</Badge>
+      <Badge className={`mr-4 ${role == 'user' ? 'bg-cyan-800' : 'bg-rose-800'}`}>{role == 'user' ? userName?.slice(0, 2) : 'GPT'}</Badge>
       <div>{role == 'user' ? message : <TypingText text={message} typingSpeed={5} />}</div>
     </div>
   )

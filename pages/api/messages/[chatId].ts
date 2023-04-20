@@ -24,6 +24,11 @@ export default async function handler(
     case "GET":
       const messages = await prisma.message.findMany({
         where: { chatId: parseInt(chatId) },
+        include: {
+          user: {
+            select: { name: true },
+          },
+        },
       });
       res.status(200).json(messages);
       break;

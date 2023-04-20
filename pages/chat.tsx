@@ -37,7 +37,6 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
   };
 
   useEffect(() => {
-    console.log('chatId', chatId);
     const getUser = async () => {
       const currentUser = await fetchCurrentUser(session);
       setUser(currentUser);
@@ -45,12 +44,12 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
     getUser();
 
     const fetchMessages = async () => {
-      console.log('chatId', chatId);
       const response = await axios.get(`/api/messages/${chatId}`);
       const newArray = response.data.map(data => {
         return {
           role: data.role,
-          content: data.content
+          content: data.content,
+          userName: data.user.name
         };
       });
       setMessages(newArray);
@@ -59,7 +58,6 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
   }, [session]);
 
   const onSubmit = async (data) => {
-    console.log('chatId', chatId);
     try{
       setLoading(true);
 
@@ -118,7 +116,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
       {messages.length == 0 && <h1 className="text-center font-medium">{user?.name}さん。ChatGPTに質問してください</h1>}
       <div className="mb-6">
         {messages.map((message, index) => (
-          <Message key={index} message={message.content} role={message.role} />
+          <Message key={index} message={message.content} role={message.role} userName={message.userName || user.name} />
         ))}
       </div>
       

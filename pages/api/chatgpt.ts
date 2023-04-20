@@ -11,6 +11,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(405).json({ message: 'Method not allowed' });
     return;
   }
+
+  const params = req.body.messages.map(data => {
+    return {
+      role: data.role,
+      content: data.content,
+    };
+  });
   
   try{
     const completion = await openai.createChatCompletion({
@@ -23,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           「小生的には」「まあ」などを使うとオタクっぽくなります。
           `, // string
         },
-        ...req.body.messages
+        ...params
       ],
     });
 
