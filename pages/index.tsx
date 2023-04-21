@@ -25,6 +25,7 @@ const NewBtn = styled.button`
   position: relative;
   width: 56px;
   height: 56px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .4);
   &::before, &::after{
     content: "";
     position: absolute;
@@ -78,7 +79,7 @@ const IndexPage = () => {
         </ChatItem>
       ))}
 
-      <NewBtnWrap><NewBtn className="bg-rose-900 hover:bg-rose-950" type="button" onClick={e => toggleModal(e, null)} /></NewBtnWrap>
+      <NewBtnWrap><NewBtn className="bg-cyan-900 hover:bg-cyan-950" type="button" onClick={e => toggleModal(e, null)} /></NewBtnWrap>
 
       {isOpenModal && (
         <Modal close={toggleModal}>

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Configuration, OpenAIApi } from "openai";
+import prisma from '../../utils/prisma';
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -12,7 +13,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const params = req.body.messages.map(data => {
+  const systemPrompts = await prisma.systemPrompt.findMany();
+  const systemPromptsArray = systemPrompts.map(prompt => {
+    return {
+      role: 'system',
+      content: prompt.content,
+    };
+  });
+
+  const messagesArray = req.body.messages.map(data => {
     return {
       role: data.role,
       content: data.content,
@@ -23,14 +32,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo", // string;
       messages: [
-        {
-          role: "system", // "user" | "assistant" | "system"
-          content: `一人称は小生。
-          オタクっぽい喋り方で、語尾は「ですな。」「ですぞ。」で回答してください。
-          「小生的には」「まあ」などを使うとオタクっぽくなります。
-          `, // string
-        },
-        ...params
+        ...systemPromptsArray,
+        ...messagesArray
       ],
     });
 

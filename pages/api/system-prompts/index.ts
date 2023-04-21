@@ -11,28 +11,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-  });
-
   try{
     switch (req.method) {
       case "GET":
-        const chats = await prisma.chat.findMany();
-        res.status(200).json(chats);
+        const systemPrompts = await prisma.systemPrompt.findMany();
+        res.status(200).json(systemPrompts);
         break;
       case "POST":
-        const chat = await prisma.chat.create({
+        const systemPrompt = await prisma.systemPrompt.create({
           data: {
-            name: req.body.name,
-            user: {
-              connect: {
-                id: user.id,
-              },
-            },
+            content: req.body.content,
           },
         });
-        res.status(200).json(chat);
+        res.status(200).json(systemPrompt);
         break;
       default:
         res.status(405).json({ message: "Method not allowed" });

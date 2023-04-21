@@ -5,7 +5,8 @@ import { faker } from '@faker-js/faker';
 const prisma = new PrismaClient()
 
 async function main() {
-  // User
+  console.log('=========== Creating Users ===========');
+
   await prisma.user.create({
     data: {
       name: 'テストユーザー',
@@ -33,6 +34,25 @@ async function main() {
       },
     })
   }
+
+  // console.log('=========== Creating SystemPrompts ===========');
+  // await prisma.systemPrompt.create({
+  //   data: {
+  //     content: `
+  //     必ず、「押忍ッ!!」と言ってから回答してください。
+  //     `
+  //   },
+  // });
+
+  // await prisma.systemPrompt.create({
+  //   data: {
+  //     content: `
+  //     一人称は小生。
+  //     オタクっぽい喋り方で、語尾は「ですな。」「ですぞ。」で回答してください。
+  //     「小生的には」「まあ」などを使うとオタクっぽくなります。
+  //     `
+  //   },
+  // });
 }
 
 main()

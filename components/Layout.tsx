@@ -10,13 +10,20 @@ const Wrap = styled.div`
 `
 
 const SiteNav = styled.nav`
-  width: 60px;
+  width: 64px;
   height: 100vh;
   text-align: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, .1);
   position: relative;
   z-index: 10;
 `
+const Icon = styled.i`
+  font-size: 32px;
+  &:hover{
+    opacity: .7;
+  }
+`
+
 
 type Props = {
   children?: ReactNode
@@ -33,7 +40,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <SiteNav>
+      <SiteNav className="pt-8">
         {!session && (
           <Link href="/auth/signin">
             ログイン
@@ -41,21 +48,19 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         )}
 
         <ul>
-          <li><Link href="/"><i className="icon-home" /></Link></li>
-          <li><Link href="/setting"><i className="icon-setting" /></Link></li>
+          <li className="mb-4"><Link href="/"><Icon className="icon-home" /></Link></li>
+          <li className="mb-4"><Link href="/setting"><Icon className="icon-setting" /></Link></li>
         </ul>
         
-        <div className="flex justify-center h-[90%]">
-          <button
-            className="mt-auto"
-            onClick={() => {
-              signOut({ callbackUrl: "/auth/signin" }); // 任意のログアウト後に遷移するページへの URL
-            }}
-          >
-            <i className="icon-sign_out" />
-          </button>
-        </div>
-        
+        <button
+          className="mt-auto"
+          onClick={() => {
+            signOut({ callbackUrl: "/auth/signin" }); // 任意のログアウト後に遷移するページへの URL
+          }}
+        >
+          <Icon className="icon-sign_out" />
+        </button>
+      
       </SiteNav>
       <div className="w-full">{children}</div>
     </Wrap>
