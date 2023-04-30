@@ -56,7 +56,7 @@ const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
             type="text"
             placeholder="Email"
             className="border-gray-200 focus:outline-none focus:border-cyan-600 mb-2"
-          ></TextField>
+           />
         </div>
         <div>
           <label htmlFor="password"></label>
@@ -65,7 +65,7 @@ const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
             type="password"
             placeholder="Password"
             className="border-gray-200 focus:outline-none focus:border-cyan-600 mb-2"
-          ></TextField>
+           />
         </div>
         <div>
           <Btn type="submit" className="bg-cyan-900 text-white hover:bg-cyan-950">ログイン</Btn>

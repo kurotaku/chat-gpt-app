@@ -84,3 +84,14 @@ model SystemPrompt {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
 }
+
+model ApiUrl {
+  id        Int      @id @default(autoincrement())
+  name      String
+  url       String
+  method    String
+  header    String   @db.Text
+  body      String   @db.Text
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+}

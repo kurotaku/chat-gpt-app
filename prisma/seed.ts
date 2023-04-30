@@ -53,6 +53,29 @@ async function main() {
   //     `
   //   },
   // });
+
+  console.log('=========== API URLs ===========');
+  await prisma.apiUrl.create({
+    data: {
+      name: 'slackbotで送って',
+      url: process.env.SLACK_WEBHOOK_URL,
+      method: 'POST',
+      header: `{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      }`,
+      body: `payload={ "text": "[text]"}`
+    },
+  });
+
+  await prisma.apiUrl.create({
+    data: {
+      name: 'slackに送って',
+      url: 'https://slack.com/api/chat.postMessage',
+      method: 'POST',
+      header: `{ "Authorization": "Bearer ${process.env.SLACK_TOKEN}"}`,
+      body: `{"channel":"#neconote","text":"[text]"}`
+    },
+  });
 }
 
 main()

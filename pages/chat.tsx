@@ -25,6 +25,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
   const [currentChatId, setCurrentChatId] = useState(chatId);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [apiUrls, setApiUrls] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
@@ -36,6 +37,11 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
     }
   };
 
+  const checkApiUrl = (name: string): number | null => {
+    const apiUrl = apiUrls.find(apiUrl => apiUrl.name === name);
+    return apiUrl ? apiUrl.id : null;
+  };
+
   useEffect(() => {
     const getUser = async () => {
       const fetchedUser = await fetchCurrentUser(session);
@@ -44,8 +50,8 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
     user || getUser();
 
     const fetchMessages = async () => {
-      const response = await axios.get(`/api/messages/${chatId}`);
-      const newArray = response.data.map(data => {
+      const getMessages = await axios.get(`/api/messages/${chatId}`);
+      const newArray = getMessages.data.map(data => {
         return {
           role: data.role,
           content: data.content,
@@ -56,9 +62,18 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
       setMessages(newArray);
     }
     if (chatId) fetchMessages();
+
+    const fetchApiUrls = async () => {
+      const getApiUrls = await axios.get('/api/apiurls');
+      setApiUrls(getApiUrls.data);
+      console.log('apiUrls', getApiUrls.data);
+    }
+    fetchApiUrls();
+
   }, [session]);
 
   const onSubmit = async (data) => {
+    console.log('currentChatId', currentChatId);
     try{
       setLoading(true);
 
@@ -74,13 +89,24 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
         ...prevMessages,
         { role: "user", content: inputText }
       ])
-      const responce = await axios.post('/api/chatgpt', { messages: [...messages, { role: "user", content: inputText }] }, { withCredentials: true });
+
+      let gptMessage: { role: string; content: string; } = {role: 'assistant', content: ''};
       
+      // 入力した文言がAPIURLのnameに該当していたら
+      const apiUrlId: number = checkApiUrl(inputText)
+      if(apiUrlId){
+        const callApi = await axios.post(`/api/apiurls/exec/${apiUrlId.toString()}`, {text: messages.slice(-1)[0].content});
+        gptMessage = { role: "assistant", content: '実行します' };
+      } else {
+        const responce = await axios.post('/api/chatgpt', { messages: [...messages, { role: "user", content: inputText }] }, { withCredentials: true });
+        gptMessage = responce.data
+      }
+
       setMessages((prevMessages) => [
         ...prevMessages,
-        responce.data
+        gptMessage
       ]);
-
+      
       // 保険としてchatId入れてる
       let newChatId: number = chatId;
 
@@ -97,11 +123,12 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
         setCurrentChatId(newChatId);
       }
 
-      setCurrentChatId(newChatId);
       console.log('newChatId', newChatId);
 
+      console.log(currentChatId || newChatId);
+
       await axios.post(`/api/messages/${currentChatId || newChatId}`, {role: "user", content: inputText}, { withCredentials: true });
-      await axios.post(`/api/messages/${currentChatId || newChatId}`, {...responce.data}, { withCredentials: true });
+      await axios.post(`/api/messages/${currentChatId || newChatId}`, {...gptMessage}, { withCredentials: true });
 
       onChatUpdated();
       
