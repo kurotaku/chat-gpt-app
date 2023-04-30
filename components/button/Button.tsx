@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import Color from '../const/Color'
 
 export const Btn = styled.button`
   display: inline-block;
@@ -12,7 +13,14 @@ export const Btn = styled.button`
   border-width: 1px;
   border-style: solid;
   cursor: pointer;
+  color: white;
   &:disabled{
     cursor: not-allowed;
+  }
+`
+export const AccentBtn = styled(Btn)`
+  background-color: ${Color.ACCENT};
+  &:hover{
+    background-color: ${Color.ACCENT_HOVER};
   }
 `

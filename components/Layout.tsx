@@ -1,12 +1,17 @@
 import React, { ReactNode } from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Head from 'next/head'
 import { signOut } from "next-auth/react"
-import { useSession } from "next-auth/react";
 import styled from 'styled-components';
+import Color from './const/Color';
 
 const Wrap = styled.div`
   display: flex;
+`
+
+const MainContent = styled.div`
+  background-color: ${Color.BG_COLOR};
 `
 
 const SiteNav = styled.nav`
@@ -19,11 +24,13 @@ const SiteNav = styled.nav`
 `
 const Icon = styled.i`
   font-size: 32px;
-  &:hover{
-    opacity: .7;
+  &::before{
+    color: ${Color.SECONDARY}
+  }
+  &:hover::before, &.current:before{
+    color: ${Color.ACCENT}
   }
 `
-
 
 type Props = {
   children?: ReactNode
@@ -31,7 +38,7 @@ type Props = {
 }
 
 const Layout = ({ children, title = 'This is the default title' }: Props) => {
-  const { data: session } = useSession();
+  const router = useRouter()
   
   return (
     <Wrap>
@@ -41,15 +48,9 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <SiteNav className="pt-8">
-        {!session && (
-          <Link href="/auth/signin">
-            ログイン
-          </Link>
-        )}
-
         <ul>
-          <li className="mb-4"><Link href="/"><Icon className="icon-home" /></Link></li>
-          <li className="mb-4"><Link href="/setting"><Icon className="icon-setting" /></Link></li>
+          <li className="mb-4"><Link href="/"><Icon className={`icon-home ${router.pathname === '/' ? 'current' : ''}`} /></Link></li>
+          <li className="mb-4"><Link href="/setting"><Icon className={`icon-setting ${router.pathname.startsWith('/setting') ? 'current' : ''}`} /></Link></li>
         </ul>
         
         <button
@@ -62,7 +63,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         </button>
       
       </SiteNav>
-      <div className="w-full">{children}</div>
+      <MainContent className="w-full">{children}</MainContent>
     </Wrap>
   )
 }

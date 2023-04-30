@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { CtxOrReq } from "next-auth/client/_utils";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../../components/form/ErrorMessage";
-import { Btn } from "../../components/button/Button";
+import { AccentBtn } from "../../components/button/Button";
 import { TextField } from "../../components/form/Input";
 
 var md5 = require("md5");
@@ -68,7 +68,7 @@ const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
            />
         </div>
         <div>
-          <Btn type="submit" className="bg-cyan-900 text-white hover:bg-cyan-950">ログイン</Btn>
+          <AccentBtn type="submit">ログイン</AccentBtn>
         </div>
       </form>
     </div>

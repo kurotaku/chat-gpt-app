@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios'
 import fetchCurrentUser from '../utils/fetchCurrentUser';
 import Layout from '../components/Layout'
-import { Btn } from '../components/button/Button';
+import { AccentBtn } from '../components/button/Button';
 import SettingNav from '../components/pages/setting/SettingNav';
 
 const setting = () => {
@@ -57,13 +57,13 @@ const setting = () => {
               placeholder="GPTへの事前情報となるプロンプトを入力してください"
             />
             <p className="text-center">
-              <Btn
+              <AccentBtn
                 type="submit"
-                className="bg-cyan-900 text-white disabled:bg-gray-300"
+                className="disabled:bg-gray-300"
                 disabled={false}
               >
                 作成
-              </Btn>
+              </AccentBtn>
             </p>
           </form>
         </div>

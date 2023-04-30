@@ -7,6 +7,7 @@ import fetchCurrentUser from '../utils/fetchCurrentUser';
 import ChatUI from './chat'
 import { formatDate } from '../utils/formatDate';
 import styled from 'styled-components'
+import Color from '../components/const/Color'
 
 const ChatItem = styled.div`
   cursor: pointer;
@@ -26,6 +27,10 @@ const NewBtn = styled.button`
   width: 56px;
   height: 56px;
   box-shadow: 0 0 10px rgba(0, 0, 0, .4);
+  background-color: ${Color.ACCENT};
+  &:hover{
+    background-color: ${Color.ACCENT_HOVER}
+  }
   &::before, &::after{
     content: "";
     position: absolute;
@@ -79,7 +84,7 @@ const IndexPage = () => {
         </ChatItem>
       ))}
 
-      <NewBtnWrap><NewBtn className="bg-cyan-900 hover:bg-cyan-950" type="button" onClick={e => toggleModal(e, null)} /></NewBtnWrap>
+      <NewBtnWrap><NewBtn type="button" onClick={e => toggleModal(e, null)} /></NewBtnWrap>
 
       {isOpenModal && (
         <Modal close={toggleModal}>
