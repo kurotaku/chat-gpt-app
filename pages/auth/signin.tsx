@@ -19,7 +19,7 @@ export const getServerSideProps = async (context: CtxOrReq | undefined) => {
   };
 };
 
-interface IFormValues {
+interface FormInput {
   email?: string;
   password?: string;
 }
@@ -27,9 +27,9 @@ interface IFormValues {
 const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
   const router = useRouter();
   const [error, setError] = useState("");
-  const { register, handleSubmit } = useForm<IFormValues>();
-  const signInUser = async (data: IFormValues) => {
-  // ここで<any>を書かないとtypeエラーが消えなかったので書いています
+  const { register, handleSubmit } = useForm<FormInput>();
+
+  const signInUser = async (data: FormInput) => {
     await signIn<any>("credentials", {
       redirect: false,
       email: data.email,
@@ -39,7 +39,6 @@ const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
       if (res?.error) {
         setError("Email,Passwordを正しく入力してください");
       } else {
-      // ログイン後に飛ぶページ
         router.push("/");
       }
     });

@@ -21,6 +21,6 @@ export const Btn = styled.button`
 export const AccentBtn = styled(Btn)`
   background-color: ${Color.ACCENT};
   &:hover{
-    background-color: ${Color.ACCENT_HOVER};
+    background-color: ${({ disabled }) => !disabled && Color.ACCENT_HOVER};
   }
 `

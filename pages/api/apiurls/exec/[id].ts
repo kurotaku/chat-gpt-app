@@ -39,7 +39,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }        
 
         let replacedBody = apiUrl[0].body.replace('[text]', text);
-        console.log('replacedBody', replacedBody);
         try {
           // エスケープされていない改行をエスケープ
           replacedBody = replacedBody.replace(/\n/g, "\\n");
@@ -49,11 +48,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           // JSON形式でなければそのまま使用
           console.log(error);
         }
-        console.log('replacedBody', replacedBody);
 
         try {
           const call = await axios.post(apiUrl[0].url, replacedBody, param);
-          console.log('call', call);
         } catch (error) {
           console.log(error);
         }

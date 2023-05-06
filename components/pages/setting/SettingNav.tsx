@@ -1,23 +1,40 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import styled from 'styled-components'
+import Color from '../../const/Color'
 
 const Nav = styled.nav`
+  width: 220px;
   flex: 0 0 auto;
-  padding: 24px;
+  padding: 32px 16px;
+  /* background: white; */
+  border-right: 1px solid ${Color.BORDER_COLOR};
   >ul>li{
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 16px;
+    a{
+      display: block;
+      color: ${Color.PRIMARY};
+      padding: 8px 16px;
+      border-radius: 4px;
+      &.current, &:hover{
+        background: #ECEEF4;
+        color: ${Color.ACCENT};
+      }
+    }
   }
 `
 
 const SettingNav = () => {
+  const router = useRouter()
+
   return (
     <Nav>
       <ul>
-        <li><Link href="/setting">システムプロンプト</Link></li>
-        <li><Link href="/setting/api-urls">API URL</Link></li>
+        <li><Link className={`${router.pathname === '/setting/system-prompts' ? 'current' : ''}`} href="/setting/system-prompts">システムプロンプト</Link></li>
+        <li><Link className={`${router.pathname === '/setting/api-urls' ? 'current' : ''}`} href="/setting/api-urls">API URL</Link></li>
       </ul>
     </Nav>
   )

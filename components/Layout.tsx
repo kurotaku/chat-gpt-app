@@ -16,7 +16,7 @@ const MainContent = styled.div`
 
 const SiteNav = styled.nav`
   width: 64px;
-  height: 100vh;
+  min-height: 100vh;
   text-align: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, .1);
   position: relative;
@@ -24,11 +24,23 @@ const SiteNav = styled.nav`
 `
 const Icon = styled.i`
   font-size: 32px;
+  position: relative;
   &::before{
     color: ${Color.SECONDARY}
   }
   &:hover::before, &.current:before{
     color: ${Color.ACCENT}
+  }
+  &.current:after{
+    display: block;
+    content: ' ';
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background: ${Color.ACCENT};
+    position: absolute;
+    top: calc(50% - 2px);
+    left: -6px;
   }
 `
 
@@ -50,7 +62,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
       <SiteNav className="pt-8">
         <ul>
           <li className="mb-4"><Link href="/"><Icon className={`icon-home ${router.pathname === '/' ? 'current' : ''}`} /></Link></li>
-          <li className="mb-4"><Link href="/setting"><Icon className={`icon-setting ${router.pathname.startsWith('/setting') ? 'current' : ''}`} /></Link></li>
+          <li className="mb-4"><Link href="/setting/system-prompts"><Icon className={`icon-setting ${router.pathname.startsWith('/setting') ? 'current' : ''}`} /></Link></li>
         </ul>
         
         <button

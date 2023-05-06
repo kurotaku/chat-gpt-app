@@ -66,14 +66,12 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
     const fetchApiUrls = async () => {
       const getApiUrls = await axios.get('/api/apiurls');
       setApiUrls(getApiUrls.data);
-      console.log('apiUrls', getApiUrls.data);
     }
     fetchApiUrls();
 
   }, [session]);
 
   const onSubmit = async (data) => {
-    console.log('currentChatId', currentChatId);
     try{
       setLoading(true);
 
@@ -98,8 +96,17 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
         const callApi = await axios.post(`/api/apiurls/exec/${apiUrlId.toString()}`, {text: messages.slice(-1)[0].content});
         gptMessage = { role: "assistant", content: '実行します' };
       } else {
-        const responce = await axios.post('/api/chatgpt', { messages: [...messages, { role: "user", content: inputText }] }, { withCredentials: true });
-        gptMessage = responce.data
+        const callGpt = await axios.post('/api/chatgpt', { messages: [...messages, { role: "user", content: inputText }] }, { withCredentials: true });
+        gptMessage = callGpt.data.choices[0].message;
+        const createGptLog = await axios.post('/api/gpt-logs', {
+                                                                  gptModel: callGpt.data.model,
+                                                                  promptTokens: callGpt.data.usage.prompt_tokens,
+                                                                  completionTokens: callGpt.data.usage.completion_tokens,
+                                                                  totalTokens: callGpt.data.usage.total_tokens,
+                                                                  prompt: inputText,
+                                                                  response: gptMessage.content
+                                                                }, { withCredentials: true });
+
       }
 
       setMessages((prevMessages) => [
@@ -122,10 +129,6 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
         newChatId = createChat.data.id;
         setCurrentChatId(newChatId);
       }
-
-      console.log('newChatId', newChatId);
-
-      console.log(currentChatId || newChatId);
 
       await axios.post(`/api/messages/${currentChatId || newChatId}`, {role: "user", content: inputText}, { withCredentials: true });
       await axios.post(`/api/messages/${currentChatId || newChatId}`, {...gptMessage}, { withCredentials: true });

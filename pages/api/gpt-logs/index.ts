@@ -8,8 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const chatId = req.query.chatId as string;
-  const session = await getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions)
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
@@ -22,30 +21,29 @@ export default async function handler(
 
   switch (req.method) {
     case "GET":
-      const messages = await prisma.message.findMany({
-        where: { chatId: parseInt(chatId) },
-        include: {
-          user: {
-            select: { name: true },
-          },
-        },
+      const logs = await prisma.gptLog.findMany({
+        where: { userId: user.id },
       });
-      res.status(200).json(messages);
+      res.status(200).json(logs);
       break;
     case "POST":
-      const { role, content } = req.body;
-      const message = await prisma.message.create({
+      const { gptModel, promptTokens, completionTokens, totalTokens, prompt, response } = req.body;
+      const log = await prisma.gptLog.create({
         data: {
-          role,
-          content,
-          chatId: parseInt(chatId),
+          gptModel,
+          promptTokens,
+          completionTokens,
+          totalTokens,
+          prompt,
+          response,
           userId: user.id,
         },
       });
-      res.status(200).json(message);
+      res.status(200).json(log);
       break;
     default:
       res.status(405).json({ message: "Method not allowed" });
       break;
+    }
   }
-}
+

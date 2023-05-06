@@ -52,6 +52,7 @@ model User {
   messages  Message[]
   accounts  Account[]
   sessions  Session[]
+  GPTLogs   GptLog[]
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @default(now()) @map(name: "updated_at")
 }
@@ -94,4 +95,18 @@ model ApiUrl {
   body      String   @db.Text
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
+}
+
+model GptLog {
+  id               Int      @id @default(autoincrement())
+  userId           Int      @map(name: "user_id")
+  user             User     @relation(fields: [userId], references: [id])
+  gptModel         String
+  promptTokens     Int
+  completionTokens Int
+  totalTokens      Int
+  prompt           String   @db.Text
+  response         String   @db.Text
+  createdAt        DateTime @default(now()) @map(name: "created_at")
+  updatedAt        DateTime @default(now()) @map(name: "updated_at")
 }

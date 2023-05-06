@@ -7,6 +7,7 @@ import Layout from '../../components/Layout'
 import { TextField, TextArea } from '../../components/form/Input';
 import { AccentBtn } from '../../components/button/Button';
 import SettingNav from '../../components/pages/setting/SettingNav';
+import { Header, Breadcrumb } from '../../components/header/Header';
 
 const setting = () => {
   const { data: session } = useSession()
@@ -37,6 +38,12 @@ const setting = () => {
 
   return (
     <Layout title="Setting">
+      <Header><h1>API URL</h1></Header>
+      <Breadcrumb>
+        <span>設定</span>
+        <i className="icon-right_arrow" />
+        <span>API URL</span>
+      </Breadcrumb>
       <div className="flex">
         <SettingNav />
         <div className="p-8 w-full">

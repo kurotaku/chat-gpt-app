@@ -30,14 +30,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   
   try{
     const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo", // string;
+      model: "gpt-4", // string;
       messages: [
         ...systemPromptsArray,
         ...messagesArray
       ],
     });
 
-    res.status(200).json(completion.data.choices[0].message);
+    res.status(200).json(completion.data);
   }catch (error) {
     res.status(500).json(error);
   }

@@ -8,6 +8,7 @@ import ChatUI from './chat'
 import { formatDate } from '../utils/formatDate';
 import styled from 'styled-components'
 import Color from '../components/const/Color'
+import { Header } from '../components/header/Header'
 
 const ChatItem = styled.div`
   cursor: pointer;
@@ -77,6 +78,9 @@ const IndexPage = () => {
   
   return(
     <Layout title="Home">
+      <Header>
+        <h1>ホーム</h1>
+      </Header>
       {chats?.map((chat, index) => (
         <ChatItem className="bg-slate-100 hover:bg-slate-200 p-8" key={index} onClick={e => toggleModal(e, chat.id)}>
           <p className="text-xs text-gray-400 mb-1">{formatDate(chat.createdAt)}</p>
