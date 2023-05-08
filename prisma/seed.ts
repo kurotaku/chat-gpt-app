@@ -35,24 +35,14 @@ async function main() {
     })
   }
 
-  // console.log('=========== Creating SystemPrompts ===========');
-  // await prisma.systemPrompt.create({
-  //   data: {
-  //     content: `
-  //     必ず、「押忍ッ!!」と言ってから回答してください。
-  //     `
-  //   },
-  // });
-
-  // await prisma.systemPrompt.create({
-  //   data: {
-  //     content: `
-  //     一人称は小生。
-  //     オタクっぽい喋り方で、語尾は「ですな。」「ですぞ。」で回答してください。
-  //     「小生的には」「まあ」などを使うとオタクっぽくなります。
-  //     `
-  //   },
-  // });
+  console.log('=========== Creating SystemPrompts ===========');
+  await prisma.systemPrompt.create({
+    data: {
+      content: `
+      語尾は「にゃん」でお願いします。
+      `
+    },
+  });
 
   console.log('=========== API URLs ===========');
   await prisma.apiUrl.create({
@@ -74,6 +64,42 @@ async function main() {
       method: 'POST',
       header: `{ "Authorization": "Bearer ${process.env.SLACK_TOKEN}"}`,
       body: `{"channel":"#neconote","text":"[text]"}`
+    },
+  });
+
+  console.log('=========== Subject ===========');
+  const subject1 = await prisma.subject.create({
+    data: {
+      name: '太郎さん',
+    }
+  });
+
+  console.log('=========== Topic ===========');
+  await prisma.topic.create({
+    data: {
+      subject: {
+        connect: {
+          id: subject1.id
+        },
+      },
+      name: '太郎さんのプロフィール',
+      content: `
+        太郎さんは30歳の男性で、ソフトウェアエンジニアの仕事をしています。
+        休日は土日祝日で、趣味は犬の散歩です。
+      `
+    },
+  });
+  await prisma.topic.create({
+    data: {
+      subject: {
+        connect: {
+          id: subject1.id
+        },
+      },
+      name: '太郎さんの好きな食べ物',
+      content: `
+        太郎さんの好きな食べ物は、ケーキやアイスなどの甘いものです。
+      `
     },
   });
 }

@@ -25,6 +25,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const chat = await prisma.chat.create({
           data: {
             name: req.body.name,
+            ...(req.body.subjectId && {
+              subject: {
+                connect: {
+                  id: req.body.subjectId,
+                },
+              },
+            }),
             user: {
               connect: {
                 id: user.id,

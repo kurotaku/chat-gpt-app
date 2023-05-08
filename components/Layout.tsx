@@ -62,6 +62,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
       <SiteNav className="pt-8">
         <ul>
           <li className="mb-4"><Link href="/"><Icon className={`icon-home ${router.pathname === '/' ? 'current' : ''}`} /></Link></li>
+          <li className="mb-4"><Link href="/subjects"><Icon className={`icon-list ${router.pathname === '/subjects' ? 'current' : ''}`} /></Link></li>
           <li className="mb-4"><Link href="/setting/system-prompts"><Icon className={`icon-setting ${router.pathname.startsWith('/setting') ? 'current' : ''}`} /></Link></li>
         </ul>
         

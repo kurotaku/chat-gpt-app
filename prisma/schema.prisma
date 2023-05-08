@@ -21,7 +21,7 @@ model Account {
   accessToken        String?   @map(name: "access_token")
   accessTokenExpires DateTime? @map(name: "access_token_expires")
   createdAt          DateTime  @default(now()) @map(name: "created_at")
-  updatedAt          DateTime  @default(now()) @map(name: "updated_at")
+  updatedAt          DateTime  @default(now()) @updatedAt @map(name: "updated_at")
   User               User      @relation(fields: [userId], references: [id])
 
   @@index([providerAccountId], name: "providerAccountId")
@@ -37,7 +37,7 @@ model Session {
   sessionToken String   @unique @map(name: "session_token")
   accessToken  String   @unique @map(name: "access_token")
   createdAt    DateTime @default(now()) @map(name: "created_at")
-  updatedAt    DateTime @default(now()) @map(name: "updated_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map(name: "updated_at")
   User         User     @relation(fields: [userId], references: [id])
 
   @@map(name: "sessions")
@@ -54,36 +54,48 @@ model User {
   sessions  Session[]
   GPTLogs   GptLog[]
   createdAt DateTime  @default(now()) @map(name: "created_at")
-  updatedAt DateTime  @default(now()) @map(name: "updated_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "users")
 }
 
 model Chat {
   id        Int       @id @default(autoincrement())
   name      String
-  userId    Int
+  userId    Int       @map(name: "user_id")
   user      User      @relation(fields: [userId], references: [id])
+  subjectId Int?
+  subject   Subject?  @relation(fields: [subjectId], references: [id])
   messages  Message[]
   createdAt DateTime  @default(now()) @map(name: "created_at")
-  updatedAt DateTime  @default(now()) @map(name: "updated_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@index([subjectId], name: "subjectId")
+  @@map(name: "chats")
 }
 
 model Message {
   id        Int      @id @default(autoincrement())
   role      String
   content   String   @db.Text
-  userId    Int
+  userId    Int      @map(name: "user_id")
   user      User     @relation(fields: [userId], references: [id])
-  chatId    Int
+  chatId    Int      @map(name: "chat_id")
   chat      Chat     @relation(fields: [chatId], references: [id])
   createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@index([chatId], name: "chatId")
+  @@map(name: "messages")
 }
 
 model SystemPrompt {
   id        Int      @id @default(autoincrement())
   content   String   @db.Text
   createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "system_prompts")
 }
 
 model ApiUrl {
@@ -94,19 +106,47 @@ model ApiUrl {
   header    String   @db.Text
   body      String   @db.Text
   createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "api_urls")
 }
 
 model GptLog {
   id               Int      @id @default(autoincrement())
   userId           Int      @map(name: "user_id")
   user             User     @relation(fields: [userId], references: [id])
-  gptModel         String
-  promptTokens     Int
-  completionTokens Int
-  totalTokens      Int
+  gptModel         String   @map(name: "gpt_model")
+  promptTokens     Int      @map(name: "prompt_tokens")
+  completionTokens Int      @map(name: "completion_tokens")
+  totalTokens      Int      @map(name: "total_tokens")
   prompt           String   @db.Text
   response         String   @db.Text
   createdAt        DateTime @default(now()) @map(name: "created_at")
-  updatedAt        DateTime @default(now()) @map(name: "updated_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "gpt_logs")
+}
+
+model Subject {
+  id        Int      @id @default(autoincrement())
+  name      String
+  chats     Chat[]
+  topics    Topic[]
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "subjects")
+}
+
+model Topic {
+  id        Int      @id @default(autoincrement())
+  subjectId Int      @map(name: "subject_id")
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  name      String
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@index([subjectId], name: "subjectId")
+  @@map(name: "topics")
 }

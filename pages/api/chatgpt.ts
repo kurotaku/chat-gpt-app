@@ -21,6 +21,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     };
   });
 
+  let topicsArray = [];
+  if(req.body.subjectId){
+    const topics = await prisma.topic.findMany({
+      where: { subjectId: req.body.subjectId },
+    });
+    topicsArray = topics.map(topic => {
+      return {
+        role: 'system',
+        content: topic.content,
+      };
+    });
+  }
+
   const messagesArray = req.body.messages.map(data => {
     return {
       role: data.role,
@@ -33,6 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       model: "gpt-3.5-turbo", // string;
       messages: [
         ...systemPromptsArray,
+        ...topicsArray,
         ...messagesArray
       ],
     });

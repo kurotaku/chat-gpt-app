@@ -8,7 +8,7 @@ import { AccentBtn } from '../../components/button/Button';
 import SettingNav from '../../components/pages/setting/SettingNav';
 import { Header, Breadcrumb } from '../../components/header/Header';
 
-const setting = () => {
+const systemPrompts = () => {
   type FormInput = {
     content: string;
   };
@@ -96,4 +96,4 @@ const setting = () => {
   )
 }
 
-export default setting
+export default systemPrompts

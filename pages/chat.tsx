@@ -13,15 +13,17 @@ function autosize(textarea) {
   textarea.style.height = textarea.scrollHeight + 4 + 'px';
 }
 
-interface ChatUIProps {
+interface ChatPageProps {
   currentUser: any;
+  currentSubject: any;
   chatId: number;
   onChatUpdated: () => void;
 }
 
-const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) => {
+const ChatPage: React.FC<ChatPageProps> = ({ currentUser, currentSubject, chatId, onChatUpdated }) => {
   const { data: session } = useSession()
   const [user, setUser] = useState(currentUser);
+  const [subject, setSubject] = useState(currentSubject);
   const [currentChatId, setCurrentChatId] = useState(chatId);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
@@ -61,7 +63,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
       });
       setMessages(newArray);
     }
-    if (chatId) fetchMessages();
+    chatId && fetchMessages();
 
     const fetchApiUrls = async () => {
       const getApiUrls = await axios.get('/api/apiurls');
@@ -96,7 +98,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
         const callApi = await axios.post(`/api/apiurls/exec/${apiUrlId.toString()}`, {text: messages.slice(-1)[0].content});
         gptMessage = { role: "assistant", content: '実行します' };
       } else {
-        const callGpt = await axios.post('/api/chatgpt', { messages: [...messages, { role: "user", content: inputText }] }, { withCredentials: true });
+        const callGpt = await axios.post('/api/chatgpt', { subjectId: subject?.id, messages: [...messages, { role: "user", content: inputText }] }, { withCredentials: true });
         gptMessage = callGpt.data.choices[0].message;
         const createGptLog = await axios.post('/api/gpt-logs', {
                                                                   gptModel: callGpt.data.model,
@@ -120,6 +122,7 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
       // 新規Chatの際の処理
       if(messages.length == 0){
         const chatData = {
+          subjectId: subject?.id,
           name: inputText.slice( 0, 100 ),
         };
         const createChat = await axios.post('/api/chats', 
@@ -183,4 +186,4 @@ const ChatUI: React.FC<ChatUIProps> = ({ currentUser, chatId, onChatUpdated }) =
   );
 };
 
-export default ChatUI;
+export default ChatPage;
