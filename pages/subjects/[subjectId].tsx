@@ -10,7 +10,7 @@ import { PrismaClient, Subject, Chat } from '@prisma/client';
 import styled from 'styled-components'
 import Layout from '../../components/Layout';
 import Modal from '../../components/modal/Modal'
-import { AccentLinkBtn } from '../../components/button/Button';
+import { BorderdLinkBtn } from '../../components/button/Button';
 import { Header, Breadcrumb } from '../../components/header/Header'
 import FloatingActionButton from '../../components/button/FloatingActionButton'
 
@@ -62,7 +62,7 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
     <Layout title={`Subject: ${subject.name}`}>
       <Header>
         <h1>{subject.name}</h1>
-        <AccentLinkBtn className="ml-auto" href={`/subjects/${subject.id}/topics`}>トピックス</AccentLinkBtn>
+        <BorderdLinkBtn className="ml-auto" href={`/subjects/${subject.id}/topics`}>トピックス</BorderdLinkBtn>
       </Header>
       <Breadcrumb>
         <span>サブジェクト</span>
