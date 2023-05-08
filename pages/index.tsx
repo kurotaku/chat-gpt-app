@@ -22,25 +22,6 @@ type IndexProps = {
   serverSideChats: Chat[];
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const response = await prisma.chat.findMany({
-    where: {
-      subjectId: null
-    }
-  });
-  const serverSideChats = response.map((chat) => ({
-    ...chat,
-    createdAt: chat.createdAt.toISOString(),
-    updatedAt: chat.updatedAt.toISOString(),
-  }));
-
-  return {
-    props: {
-      serverSideChats,
-    },
-  };
-};
-
 const IndexPage = ({ serverSideChats }: IndexProps) => {
   const { data: session } = useSession()
   const [user, setUser] = useState(null);
@@ -94,4 +75,23 @@ const IndexPage = ({ serverSideChats }: IndexProps) => {
     </Layout>
   )
 }
-export default IndexPage
+export default IndexPage;
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const response = await prisma.chat.findMany({
+    where: {
+      subjectId: null
+    }
+  });
+  const serverSideChats = response.map((chat) => ({
+    ...chat,
+    createdAt: chat.createdAt.toISOString(),
+    updatedAt: chat.updatedAt.toISOString(),
+  }));
+
+  return {
+    props: {
+      serverSideChats,
+    },
+  };
+};

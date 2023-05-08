@@ -6,6 +6,8 @@ export const Header = styled.header`
   background: white;
   border-bottom: 1px solid ${Color.BORDER_COLOR};
   font-size: 20px;
+  display: flex;
+  align-items: flex-start;
   h1, p{
     color: ${Color.PRIMARY};
     font-weight: bold;

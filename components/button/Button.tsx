@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import styled from 'styled-components'
 import Color from '../const/Color'
 
@@ -14,6 +15,7 @@ export const Btn = styled.button`
   border-style: solid;
   cursor: pointer;
   color: white;
+  font-size: 16px;
   &:disabled{
     cursor: not-allowed;
   }
@@ -23,4 +25,8 @@ export const AccentBtn = styled(Btn)`
   &:hover{
     background-color: ${({ disabled }) => !disabled && Color.ACCENT_HOVER};
   }
+`
+
+export const AccentLinkBtn = styled(Btn.withComponent(Link))`
+  background-color: ${Color.ACCENT};
 `
