@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { useSession } from "next-auth/react"
 import { useForm } from 'react-hook-form';
 import axios from 'axios'
-import fetchCurrentUser from '../../utils/fetchCurrentUser';
 import Layout from '../../components/Layout'
+import Modal from '../../components/modal/Modal'
 import { AccentBtn } from '../../components/button/Button';
 import SettingNav from '../../components/pages/setting/SettingNav';
 import { Header, Breadcrumb } from '../../components/header/Header';
+import FloatingActionButton from '../../components/button/FloatingActionButton'
 
 const systemPrompts = () => {
   type FormInput = {
@@ -37,6 +38,12 @@ const systemPrompts = () => {
     fetchPrompts();
   }, [session]);
 
+  const toggleModal = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setIsOpenModal(!isOpenModal);
+    }
+  };
+
   const onSubmit = async (data) => {
     await axios.post('/api/system-prompts',
       data,
@@ -44,6 +51,7 @@ const systemPrompts = () => {
     );
     fetchPrompts();
     reset();
+    setIsOpenModal(!isOpenModal);
   }
   return (
     <Layout title="Setting">
@@ -56,40 +64,47 @@ const systemPrompts = () => {
       <div className="flex">
         <SettingNav />
         <div className="p-8 w-full">
-          <div className='mb-4'>
-            <h1 className="font-bold">システムプロンプト</h1>
-          </div>
-
           {prompts?.map((systemPrompt, index) => (
-            <div key={index} className="bg-gray-100 p-8 mb-1">{systemPrompt.content}</div>
+            <div key={index} className="bg-slate-200 p-8 mb-1">{systemPrompt.content}</div>
           ))}
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className='mt-8'
-          >
-            <div className='mb-4'>
-              <textarea
-                {...register('content', {
-                  required: '必須項目です',
-                  validate: (value) => value.trim() !== '' || 'Content cannot be empty',
-                })}
-                className="border w-full p-4"
-                placeholder="GPTへの事前情報となるプロンプトを入力してください"
-              />
-              {errors.content && <p className="text-red-600">{errors.content.message}</p>}
-            </div>
+          <FloatingActionButton type="button" onClick={e => toggleModal(e)}><i className="icon-plus"></i></FloatingActionButton>
 
-            <p className="text-center">
-              <AccentBtn
-                type="submit"
-                className="disabled:bg-gray-300"
-                disabled={!content.trim()}
-              >
-                作成
-              </AccentBtn>
-            </p>
-          </form>
+          {isOpenModal && (
+            <Modal close={toggleModal}>
+              <div className="px-8">
+                <h2 className="font-bold">プロンプト作成</h2>
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className='mt-8'
+                >
+                  <div className='mb-4'>
+                    <textarea
+                      {...register('content', {
+                        required: '必須項目です',
+                        validate: (value) => value.trim() !== '' || 'Content cannot be empty',
+                      })}
+                      className="border w-full p-4"
+                      placeholder="GPTへの事前情報となるプロンプトを入力してください"
+                    />
+                    {errors.content && <p className="text-red-600">{errors.content.message}</p>}
+                  </div>
+
+                  <p className="text-center">
+                    <AccentBtn
+                      type="submit"
+                      className="disabled:bg-gray-300"
+                      disabled={!content.trim()}
+                    >
+                      作成
+                    </AccentBtn>
+                  </p>
+                </form>
+              </div>
+              
+            </Modal>
+          )}
+          
         </div>
       </div>
     </Layout>
