@@ -58,7 +58,7 @@ const IndexPage = ({ serverSideChats }: IndexProps) => {
       </Header>
       {chats?.map((chat, index) => (
         <ChatItem className="bg-slate-200 hover:bg-slate-300 p-8" key={index} onClick={e => toggleModal(e, chat.id)}>
-          <p className="text-xs text-gray-400 mb-1">{formatDate(chat.createdAt)}</p>
+          <p className="text-xs text-gray-400 mb-1">{formatDate(chat.createdAt.toString())}</p>
           {chat.name}
         </ChatItem>
       ))}

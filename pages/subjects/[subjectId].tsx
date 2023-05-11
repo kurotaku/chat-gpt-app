@@ -37,7 +37,7 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
   // const { id } = router.query;
 
   const fetchChats = async () => {
-    const responce = await axios.get('/api/chats');
+    const responce = await axios.get(`/api/chats?subjectId=${subject.id}`);
     setChats([...responce.data]);
   }
 
@@ -72,7 +72,7 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
 
       {chats?.map((chat, index) => (
         <ChatItem className="bg-slate-200 hover:bg-slate-300 p-8" key={index} onClick={e => toggleModal(e, chat.id)}>
-          <p className="text-xs text-gray-400 mb-1">{formatDate(chat.createdAt)}</p>
+          <p className="text-xs text-gray-400 mb-1">{formatDate(chat.createdAt.toString())}</p>
           {chat.name}
         </ChatItem>
       ))}

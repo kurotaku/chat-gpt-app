@@ -18,7 +18,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try{
     switch (req.method) {
       case "GET":
-        const chats = await prisma.chat.findMany();
+        const chats = await prisma.chat.findMany({
+          where: {
+            subjectId: req.query.subjectId ? Number(req.query.subjectId) : null,
+          },
+        });
         res.status(200).json(chats);
         break;
       case "POST":
