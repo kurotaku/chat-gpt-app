@@ -75,7 +75,7 @@ CREATE TABLE `messages` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `system_prompts` (
+CREATE TABLE `global_prompts` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `content` TEXT NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -125,7 +125,7 @@ CREATE TABLE `subjects` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `topics` (
+CREATE TABLE `subject_prompts` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `subject_id` INTEGER NOT NULL,
     `name` VARCHAR(191) NOT NULL,
@@ -159,4 +159,4 @@ ALTER TABLE `messages` ADD CONSTRAINT `messages_chat_id_fkey` FOREIGN KEY (`chat
 ALTER TABLE `gpt_logs` ADD CONSTRAINT `gpt_logs_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `topics` ADD CONSTRAINT `topics_subject_id_fkey` FOREIGN KEY (`subject_id`) REFERENCES `subjects`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `subject_prompts` ADD CONSTRAINT `subject_prompts_subject_id_fkey` FOREIGN KEY (`subject_id`) REFERENCES `subjects`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

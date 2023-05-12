@@ -3,19 +3,18 @@ import { useSession } from "next-auth/react"
 import { useForm } from 'react-hook-form';
 import axios from 'axios'
 import Layout from '../../components/Layout'
-import Modal from '../../components/modal/Modal'
 import { AccentBtn } from '../../components/button/Button';
 import SettingNav from '../../components/pages/setting/SettingNav';
 import { Header, Breadcrumb } from '../../components/header/Header';
+import Modal from '../../components/modal/Modal'
 import FloatingActionButton from '../../components/button/FloatingActionButton'
 
-const systemPrompts = () => {
+const globalPrompts = () => {
   type FormInput = {
     content: string;
   };
 
   const { data: session } = useSession()
-  const [user, setUser] = useState(null);
   const [prompts, setPrompts] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -30,7 +29,7 @@ const systemPrompts = () => {
   const content = watch('content', '');
 
   const fetchPrompts = async () => {
-    const responce = await axios.get('/api/system-prompts');
+    const responce = await axios.get('/api/global-prompts');
     setPrompts([...responce.data]);
   }
 
@@ -45,7 +44,7 @@ const systemPrompts = () => {
   };
 
   const onSubmit = async (data) => {
-    await axios.post('/api/system-prompts',
+    await axios.post('/api/global-prompts',
       data,
       { withCredentials: true }
     );
@@ -53,9 +52,10 @@ const systemPrompts = () => {
     reset();
     setIsOpenModal(!isOpenModal);
   }
+  
   return (
     <Layout title="Setting">
-      <Header><h1>システムプロンプト</h1></Header>
+      <Header><h1>システム全体で使うプロンプト</h1></Header>
       <Breadcrumb>
         <span>設定</span>
         <i className="icon-right_arrow" />
@@ -64,8 +64,8 @@ const systemPrompts = () => {
       <div className="flex">
         <SettingNav />
         <div className="p-8 w-full">
-          {prompts?.map((systemPrompt, index) => (
-            <div key={index} className="bg-slate-200 p-8 mb-1">{systemPrompt.content}</div>
+          {prompts?.map((globalPrompt, index) => (
+            <div key={index} className="bg-slate-200 p-8 mb-1">{globalPrompt.content}</div>
           ))}
 
           <FloatingActionButton type="button" onClick={e => toggleModal(e)}><i className="icon-plus"></i></FloatingActionButton>
@@ -111,4 +111,4 @@ const systemPrompts = () => {
   )
 }
 
-export default systemPrompts
+export default globalPrompts

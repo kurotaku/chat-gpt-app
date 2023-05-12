@@ -3,18 +3,16 @@ import { useSession } from "next-auth/react"
 import { useForm } from 'react-hook-form';
 import axios from 'axios'
 import Layout from '../../components/Layout'
-import Modal from '../../components/modal/Modal'
 import { TextField, TextArea } from '../../components/form/Input';
 import { AccentBtn } from '../../components/button/Button';
 import SettingNav from '../../components/pages/setting/SettingNav';
 import { Header, Breadcrumb } from '../../components/header/Header';
+import Modal from '../../components/modal/Modal'
 import FloatingActionButton from '../../components/button/FloatingActionButton'
 
-const setting = () => {
+const apiUrls = () => {
   const { data: session } = useSession()
-  const [user, setUser] = useState(null);
   const [apiUrls, setApiUrls] = useState(null);
-  const [selectedChatId, setSelectedChatId] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const { register, handleSubmit, reset } = useForm();
@@ -123,5 +121,5 @@ const setting = () => {
   )
 }
 
-export default setting
+export default apiUrls
 

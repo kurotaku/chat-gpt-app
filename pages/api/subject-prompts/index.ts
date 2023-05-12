@@ -14,16 +14,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try{
     switch (req.method) {
       case "GET":
-        const systemPrompts = await prisma.systemPrompt.findMany();
-        res.status(200).json(systemPrompts);
+        const subjectPrompts = await prisma.subjectPrompt.findMany({
+          where: {
+            subjectId: Number(req.query.subjectId)
+          }}
+        );
+        res.status(200).json(subjectPrompts);
         break;
       case "POST":
-        const systemPrompt = await prisma.systemPrompt.create({
+        const subjectPrompt = await prisma.subjectPrompt.create({
           data: {
+            subject: {
+              connect: {
+                id: Number(req.body.subjectId)
+              },
+            },
+            name: req.body.name,
             content: req.body.content,
           },
         });
-        res.status(200).json(systemPrompt);
+        res.status(200).json(subjectPrompt);
         break;
       default:
         res.status(405).json({ message: "Method not allowed" });

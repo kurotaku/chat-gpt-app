@@ -13,23 +13,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const systemPrompts = await prisma.systemPrompt.findMany();
-  const systemPromptsArray = systemPrompts.map(prompt => {
+  const globalPrompts = await prisma.globalPrompt.findMany();
+  const globalPromptsArray = globalPrompts.map(prompt => {
     return {
       role: 'system',
       content: prompt.content,
     };
   });
 
-  let topicsArray = [];
+  let subjectPromptsArray = [];
   if(req.body.subjectId){
-    const topics = await prisma.topic.findMany({
+    const subjectPrompts = await prisma.subjectPrompt.findMany({
       where: { subjectId: req.body.subjectId },
     });
-    topicsArray = topics.map(topic => {
+    subjectPromptsArray = subjectPrompts.map(subjectPrompt => {
       return {
         role: 'system',
-        content: topic.content,
+        content: subjectPrompt.content,
       };
     });
   }
@@ -45,8 +45,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo", // string;
       messages: [
-        ...systemPromptsArray,
-        ...topicsArray,
+        ...globalPromptsArray,
+        ...subjectPromptsArray,
         ...messagesArray
       ],
     });

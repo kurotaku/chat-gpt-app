@@ -89,13 +89,13 @@ model Message {
   @@map(name: "messages")
 }
 
-model SystemPrompt {
+model GlobalPrompt {
   id        Int      @id @default(autoincrement())
   content   String   @db.Text
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
 
-  @@map(name: "system_prompts")
+  @@map(name: "global_prompts")
 }
 
 model ApiUrl {
@@ -131,14 +131,14 @@ model Subject {
   id        Int      @id @default(autoincrement())
   name      String
   chats     Chat[]
-  topics    Topic[]
+  topics    SubjectPrompt[]
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
 
   @@map(name: "subjects")
 }
 
-model Topic {
+model SubjectPrompt {
   id        Int      @id @default(autoincrement())
   subjectId Int      @map(name: "subject_id")
   subject   Subject  @relation(fields: [subjectId], references: [id])
@@ -148,5 +148,5 @@ model Topic {
   updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
 
   @@index([subjectId], name: "subjectId")
-  @@map(name: "topics")
+  @@map(name: "subject_prompts")
 }

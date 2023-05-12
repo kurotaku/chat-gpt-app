@@ -13,6 +13,12 @@ function autosize(textarea) {
   textarea.style.height = textarea.scrollHeight + 4 + 'px';
 }
 
+function textToSpeech(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "ja-JP";
+  speechSynthesis.speak(utterance);
+}
+
 interface ChatPageProps {
   currentUser: any;
   currentSubject: any;
@@ -30,6 +36,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ currentUser, currentSubject, chatId
   const [apiUrls, setApiUrls] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm();
+  const [isSpeechDisabled, setIsSpeechDisabled] = useState(true);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -42,6 +49,14 @@ const ChatPage: React.FC<ChatPageProps> = ({ currentUser, currentSubject, chatId
   const checkApiUrl = (name: string): number | null => {
     const apiUrl = apiUrls.find(apiUrl => apiUrl.name === name);
     return apiUrl ? apiUrl.id : null;
+  };
+
+  const handleToggleSpeech = () => {
+    setIsSpeechDisabled(!isSpeechDisabled);
+  };
+  
+  const handleStopSpeech = () => {
+    speechSynthesis.cancel();
   };
 
   useEffect(() => {
@@ -72,6 +87,12 @@ const ChatPage: React.FC<ChatPageProps> = ({ currentUser, currentSubject, chatId
     fetchApiUrls();
 
   }, [session]);
+
+  useEffect(() => {
+    if (!isSpeechDisabled && messages.length >= 2 && messages[messages.length - 1].role === "assistant") {
+      textToSpeech(messages[messages.length - 1].content);
+    }
+  }, [messages, isSpeechDisabled]);
 
   const onSubmit = async (data) => {
     try{
@@ -147,6 +168,14 @@ const ChatPage: React.FC<ChatPageProps> = ({ currentUser, currentSubject, chatId
 
   return (
     <div>
+      <div className="flex">
+        <button onClick={handleToggleSpeech}>
+          {isSpeechDisabled ? "音声off" : "音声on"}
+        </button>
+        <button onClick={handleStopSpeech}>
+          読み上げ停止
+        </button>
+      </div>
       {messages.length == 0 && <h1 className="text-center font-medium">{user?.name}さん。ChatGPTに質問してください</h1>}
       <div className="mb-6">
         {messages.map((message, index) => (

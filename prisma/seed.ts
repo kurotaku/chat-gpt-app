@@ -35,8 +35,8 @@ async function main() {
     })
   }
 
-  console.log('=========== Creating SystemPrompts ===========');
-  await prisma.systemPrompt.create({
+  console.log('=========== Creating GlobalPrompts ===========');
+  await prisma.globalPrompt.create({
     data: {
       content: `
       語尾は「にゃん」でお願いします。
@@ -74,8 +74,8 @@ async function main() {
     }
   });
 
-  console.log('=========== Topic ===========');
-  await prisma.topic.create({
+  console.log('=========== SubjectPrompt ===========');
+  await prisma.subjectPrompt.create({
     data: {
       subject: {
         connect: {
@@ -89,7 +89,7 @@ async function main() {
       `
     },
   });
-  await prisma.topic.create({
+  await prisma.subjectPrompt.create({
     data: {
       subject: {
         connect: {

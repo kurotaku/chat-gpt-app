@@ -62,10 +62,10 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
     <Layout title={`Subject: ${subject.name}`}>
       <Header>
         <h1>{subject.name}</h1>
-        <BorderdLinkBtn className="ml-auto" href={`/subjects/${subject.id}/topics`}>トピックス</BorderdLinkBtn>
+        <BorderdLinkBtn className="ml-auto" href={`/subjects/${subject.id}/subject-prompts`}>プロンプト</BorderdLinkBtn>
       </Header>
       <Breadcrumb>
-        <span>サブジェクト</span>
+        <span>話題</span>
         <i className="icon-right_arrow" />
         <span>{subject.name}</span>
       </Breadcrumb>

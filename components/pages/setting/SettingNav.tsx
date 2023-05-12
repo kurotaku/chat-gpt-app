@@ -33,7 +33,7 @@ const SettingNav = () => {
   return (
     <Nav>
       <ul>
-        <li><Link className={`${router.pathname === '/setting/system-prompts' ? 'current' : ''}`} href="/setting/system-prompts">システムプロンプト</Link></li>
+        <li><Link className={`${router.pathname === '/setting/global-prompts' ? 'current' : ''}`} href="/setting/global-prompts">システムプロンプト</Link></li>
         <li><Link className={`${router.pathname === '/setting/api-urls' ? 'current' : ''}`} href="/setting/api-urls">API URL</Link></li>
       </ul>
     </Nav>
