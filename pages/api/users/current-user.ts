@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { authOptions } from '../auth/[...nextauth]';
-import { getServerSession } from "next-auth/next"
+import { getServerSession } from 'next-auth/next';
 import prisma from '../../../utils/prisma';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Get the current session from the request
-  const session = await getServerSession(req, res, authOptions)
+  const session = await getServerSession(req, res, authOptions);
 
   if (!session) {
     // If there is no session, respond with a 401 status and a message

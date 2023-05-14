@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import Color from '../const/Color'
+import styled from 'styled-components';
+import Color from '../const/Color';
 
 const Input = styled.div`
   border-radius: 8px;
@@ -9,10 +9,10 @@ const Input = styled.div`
   border-width: 2px;
   border-style: solid;
   border-color: ${Color.BORDER_COLOR};
-  &:focus{
+  &:focus {
     border-color: ${Color.ACCENT};
   }
-`
+`;
 
 export const TextArea = styled(Input.withComponent('textarea'))`
   -webkit-appearance: none;
@@ -23,7 +23,6 @@ export const TextArea = styled(Input.withComponent('textarea'))`
   background: transparent;
   max-width: 100%;
   background-color: white;
-`
+`;
 
-export const TextField = styled(Input.withComponent('input'))`
-`
+export const TextField = styled(Input.withComponent('input'))``;

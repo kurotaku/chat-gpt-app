@@ -1,25 +1,23 @@
-import React from "react"
-import Portal from "./Portal"
-import styles from "./Modal.module.scss"
+import React from 'react';
+import Portal from './Portal';
+import styles from './Modal.module.scss';
 
 type Props = {
-  title?: string,
+  title?: string;
   close: (e: any) => void;
   children: React.ReactNode;
 };
 
-const Modal: React.FC<Props> = props => {
+const Modal: React.FC<Props> = (props) => {
   return (
     <Portal>
       <div className={styles.modal} onClick={props.close}>
         <div>
           <header>
             {props.title && <div>{props.title}に関するチャット</div>}
-            <button type="button" onClick={props.close} />
+            <button type='button' onClick={props.close} />
           </header>
-          <div>
-            {props.children}
-          </div>
+          <div>{props.children}</div>
         </div>
       </div>
     </Portal>

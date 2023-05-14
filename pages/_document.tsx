@@ -12,7 +12,7 @@ export default class MyDocument extends Document {
           enhanceApp: (App) =>
             function MyDocument(props) {
               return sheet.collectStyles(<App {...props} />);
-            }
+            },
         });
       };
 
@@ -25,7 +25,7 @@ export default class MyDocument extends Document {
             {initialProps.styles}
             {sheet.getStyleElement()}
           </>
-        )
+        ),
       };
     } finally {
       sheet.seal();

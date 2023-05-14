@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const loadingAnimation = keyframes`
@@ -13,7 +13,7 @@ const loadingAnimation = keyframes`
 const DotWrap = styled.div`
   display: flex;
   justify-content: center;
-`
+`;
 
 const LoadingDot = styled.span`
   display: inline-block;
@@ -34,12 +34,12 @@ const LoadingDot = styled.span`
 
 const Roading = () => {
   return (
-    <DotWrap className="mb-6">
-      <LoadingDot className="bg-cyan-900" />
-      <LoadingDot className="bg-cyan-900" />
-      <LoadingDot className="bg-cyan-900" />
+    <DotWrap className='mb-6'>
+      <LoadingDot className='bg-cyan-900' />
+      <LoadingDot className='bg-cyan-900' />
+      <LoadingDot className='bg-cyan-900' />
     </DotWrap>
-  )
-}
+  );
+};
 
-export default Roading
+export default Roading;

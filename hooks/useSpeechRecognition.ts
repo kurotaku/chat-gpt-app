@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface ISpeechRecognitionEvent {
   isTrusted?: boolean;
@@ -6,10 +6,10 @@ interface ISpeechRecognitionEvent {
   results: {
     isFinal: boolean;
     [key: number]:
-    | undefined
-    | {
-      transcript: string;
-    };
+      | undefined
+      | {
+          transcript: string;
+        };
   }[];
 }
 
@@ -45,7 +45,7 @@ declare var webkitSpeechRecognition: any;
 
 interface IUseSpeechRecognition {
   enabled: boolean;
-  lang: "ja" | "en";
+  lang: 'ja' | 'en';
   continuous: boolean; // 連続的に音声認識
   interimResults: boolean; // 途中結果の出力
 }
@@ -57,13 +57,15 @@ interface ISpeechRecognitionResult {
 
 /**
  * 音声認識ReactHook
- * @param props 
- * @returns 
+ * @param props
+ * @returns
  */
-const useSpeechRecognition = (props: IUseSpeechRecognition): [ISpeechRecognitionResult, () => void, () => void] => {
+const useSpeechRecognition = (
+  props: IUseSpeechRecognition,
+): [ISpeechRecognitionResult, () => void, () => void] => {
   const ref = useRef<ISpeechRecognitionResult>({
     finishText: '',
-    interimText: ''
+    interimText: '',
   });
   const [text, setText] = useState<string>();
   const [isStarted, setIsStarted] = useState(false);
@@ -88,21 +90,21 @@ const useSpeechRecognition = (props: IUseSpeechRecognition): [ISpeechRecognition
           ref.current.interimText = interimTranscript;
         }
       }
-    }
-    else {
-      ref.current.interimText = "";
-      ref.current.finishText = "";
+    } else {
+      ref.current.interimText = '';
+      ref.current.finishText = '';
     }
   };
 
   const startRecognition = useCallback(() => {
     if (!isStarted) {
-      navigator.mediaDevices.getUserMedia({ audio: true })
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
         .then(() => {
           recognition.start();
           setIsStarted(true);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error);
         });
     }
@@ -120,6 +122,6 @@ const useSpeechRecognition = (props: IUseSpeechRecognition): [ISpeechRecognition
   }, [stopRecognition]);
 
   return [ref.current, startRecognition, stopRecognition];
-}
+};
 
 export default useSpeechRecognition;

@@ -1,17 +1,19 @@
 import { GetServerSideProps } from 'next';
-import { useState, useEffect } from 'react'
-import { useSession } from "next-auth/react"
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios'
-import Link from 'next/link'
+import axios from 'axios';
+import Link from 'next/link';
 import { PrismaClient, Subject } from '@prisma/client';
+import { toast } from 'react-toastify';
 import fetchCurrentUser from '../../utils/fetchCurrentUser';
-import Layout from '../../components/Layout'
-import { Header } from '../../components/header/Header'
+import Layout from '../../components/Layout';
+import { Header } from '../../components/header/Header';
 import { TextField } from '../../components/form/Input';
 import { AccentBtn } from '../../components/button/Button';
-import Modal from '../../components/modal/Modal'
-import FloatingActionButton from '../../components/button/FloatingActionButton'
+import Modal from '../../components/modal/Modal';
+import FloatingActionButton from '../../components/button/FloatingActionButton';
 
 const prisma = new PrismaClient();
 
@@ -24,7 +26,10 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
     name: string;
   };
 
-  const { data: session } = useSession()
+  const router = useRouter();
+  const { deleted } = router.query;
+
+  const { data: session } = useSession();
   const [user, setUser] = useState(null);
   const [subjects, setSubjects] = useState(serverSideSubjects);
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -39,11 +44,17 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
 
   const name = watch('name', '');
 
-
   const fetcSubjects = async () => {
     const response = await axios.get('/api/subjects');
     setSubjects([...response.data]);
-  }
+  };
+
+  useEffect(() => {
+    // URLパラメータ"deleted=true"が存在する場合、メッセージを表示
+    if (deleted === 'true') {
+      toast.success('話題を削除しました');
+    }
+  }, [deleted]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -60,56 +71,48 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
   };
 
   const onSubmit = async (data) => {
-    await axios.post('/api/subjects',
-      data,
-      { withCredentials: true }
-    );
+    await axios.post('/api/subjects', data, { withCredentials: true });
     fetcSubjects();
     reset();
     setIsOpenModal(!isOpenModal);
-  }
-  
+  };
+
   return (
-    <Layout title="Subject">
+    <Layout title='Subject'>
       <Header>
         <h1>話題</h1>
       </Header>
       {subjects?.map((subject, index) => (
         <Link
           href={`/subjects/${subject.id}`}
-          className="block bg-slate-200 hover:bg-slate-300 p-8 mb-1"
+          className='block bg-slate-200 hover:bg-slate-300 p-8 mb-1'
         >
           {subject.name}
         </Link>
       ))}
 
-      <FloatingActionButton type="button" onClick={e => toggleModal(e)}><i className="icon-plus"></i></FloatingActionButton>
+      <FloatingActionButton type='button' onClick={(e) => toggleModal(e)}>
+        <i className='icon-plus'></i>
+      </FloatingActionButton>
 
       {isOpenModal && (
         <Modal close={toggleModal}>
-          <div className="px-8">
-            <h2 className="font-bold">話題作成</h2>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className='mt-8'
-            >
+          <div className='px-8'>
+            <h2 className='font-bold'>話題作成</h2>
+            <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
               <div className='mb-4'>
                 <TextField
                   {...register('name', {
                     required: '必須項目です',
                     validate: (value) => value.trim() !== '' || 'Name cannot be empty',
                   })}
-                  placeholder="話題名"
+                  placeholder='話題名'
                 />
-                {errors.name && <p className="text-red-600">{errors.name.message}</p>}
+                {errors.name && <p className='text-red-600'>{errors.name.message}</p>}
               </div>
 
-              <p className="text-center">
-                <AccentBtn
-                  type="submit"
-                  className="disabled:bg-gray-300"
-                  disabled={!name.trim()}
-                >
+              <p className='text-center'>
+                <AccentBtn type='submit' className='disabled:bg-gray-300' disabled={!name.trim()}>
                   作成
                 </AccentBtn>
               </p>
@@ -117,13 +120,11 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
           </div>
         </Modal>
       )}
-            
     </Layout>
-  )
-}
+  );
+};
 
 export default SubjectsIndex;
-
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const response = await prisma.subject.findMany();

@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
-import { useSession } from "next-auth/react"
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios'
-import Layout from '../../components/Layout'
+import axios from 'axios';
+import Layout from '../../components/Layout';
 import { AccentBtn } from '../../components/button/Button';
 import SettingNav from '../../components/pages/setting/SettingNav';
 import { Header, Breadcrumb } from '../../components/header/Header';
-import Modal from '../../components/modal/Modal'
-import FloatingActionButton from '../../components/button/FloatingActionButton'
+import Modal from '../../components/modal/Modal';
+import FloatingActionButton from '../../components/button/FloatingActionButton';
 
 const globalPrompts = () => {
   type FormInput = {
     content: string;
   };
 
-  const { data: session } = useSession()
+  const { data: session } = useSession();
   const [prompts, setPrompts] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -31,7 +31,7 @@ const globalPrompts = () => {
   const fetchPrompts = async () => {
     const responce = await axios.get('/api/global-prompts');
     setPrompts([...responce.data]);
-  }
+  };
 
   useEffect(() => {
     fetchPrompts();
@@ -44,56 +44,56 @@ const globalPrompts = () => {
   };
 
   const onSubmit = async (data) => {
-    await axios.post('/api/global-prompts',
-      data,
-      { withCredentials: true }
-    );
+    await axios.post('/api/global-prompts', data, { withCredentials: true });
     fetchPrompts();
     reset();
     setIsOpenModal(!isOpenModal);
-  }
-  
+  };
+
   return (
-    <Layout title="Setting">
-      <Header><h1>システム全体で使うプロンプト</h1></Header>
+    <Layout title='Setting'>
+      <Header>
+        <h1>システム全体で使うプロンプト</h1>
+      </Header>
       <Breadcrumb>
         <span>設定</span>
-        <i className="icon-right_arrow" />
+        <i className='icon-right_arrow' />
         <span>システムプロンプト</span>
       </Breadcrumb>
-      <div className="flex">
+      <div className='flex'>
         <SettingNav />
-        <div className="p-8 w-full">
+        <div className='p-8 w-full'>
           {prompts?.map((globalPrompt, index) => (
-            <div key={index} className="bg-slate-200 p-8 mb-1">{globalPrompt.content}</div>
+            <div key={index} className='bg-slate-200 p-8 mb-1'>
+              {globalPrompt.content}
+            </div>
           ))}
 
-          <FloatingActionButton type="button" onClick={e => toggleModal(e)}><i className="icon-plus"></i></FloatingActionButton>
+          <FloatingActionButton type='button' onClick={(e) => toggleModal(e)}>
+            <i className='icon-plus'></i>
+          </FloatingActionButton>
 
           {isOpenModal && (
             <Modal close={toggleModal}>
-              <div className="px-8">
-                <h2 className="font-bold">プロンプト作成</h2>
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className='mt-8'
-                >
+              <div className='px-8'>
+                <h2 className='font-bold'>プロンプト作成</h2>
+                <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
                   <div className='mb-4'>
                     <textarea
                       {...register('content', {
                         required: '必須項目です',
                         validate: (value) => value.trim() !== '' || 'Content cannot be empty',
                       })}
-                      className="border w-full p-4"
-                      placeholder="GPTへの事前情報となるプロンプトを入力してください"
+                      className='border w-full p-4'
+                      placeholder='GPTへの事前情報となるプロンプトを入力してください'
                     />
-                    {errors.content && <p className="text-red-600">{errors.content.message}</p>}
+                    {errors.content && <p className='text-red-600'>{errors.content.message}</p>}
                   </div>
 
-                  <p className="text-center">
+                  <p className='text-center'>
                     <AccentBtn
-                      type="submit"
-                      className="disabled:bg-gray-300"
+                      type='submit'
+                      className='disabled:bg-gray-300'
                       disabled={!content.trim()}
                     >
                       作成
@@ -101,14 +101,12 @@ const globalPrompts = () => {
                   </p>
                 </form>
               </div>
-              
             </Modal>
           )}
-          
         </div>
       </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default globalPrompts
+export default globalPrompts;

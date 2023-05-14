@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import Color from '../const/Color'
+import styled from 'styled-components';
+import Color from '../const/Color';
 
 const FloatingActionButton = styled.button`
   position: fixed;
@@ -11,17 +11,17 @@ const FloatingActionButton = styled.button`
   justify-content: center;
   width: 56px;
   height: 56px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, .4);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
   background-color: ${Color.ACCENT};
-  &:hover{
-    background-color: ${Color.ACCENT_HOVER}
+  &:hover {
+    background-color: ${Color.ACCENT_HOVER};
   }
-  *{
+  * {
     pointer-events: none;
   }
-  i:before{
+  i:before {
     font-size: 28px;
     color: white;
   }
-`
-export default FloatingActionButton
+`;
+export default FloatingActionButton;

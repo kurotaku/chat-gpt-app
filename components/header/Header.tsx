@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import Color from "../const/Color";
+import styled from 'styled-components';
+import Color from '../const/Color';
 
 export const Header = styled.header`
   padding: 24px;
@@ -8,12 +8,13 @@ export const Header = styled.header`
   font-size: 20px;
   display: flex;
   align-items: flex-start;
-  h1, p{
+  h1,
+  p {
     color: ${Color.PRIMARY};
     font-weight: bold;
-    letter-spacing: .16rem;
+    letter-spacing: 0.16rem;
   }
-`
+`;
 
 export const Breadcrumb = styled.div`
   padding: 16px 24px;
@@ -21,16 +22,16 @@ export const Breadcrumb = styled.div`
   font-size: 16px;
   display: flex;
   align-items: center;
-  span{
+  span {
     color: ${Color.PRIMARY};
     font-weight: bold;
     display: inline-block;
     margin-right: 8px;
   }
-  i:before{
+  i:before {
     font-size: 26px;
     color: ${Color.PRIMARY};
     display: inline-block;
     margin-right: 8px;
   }
-`
+`;

@@ -26,7 +26,7 @@ const TypingText = ({ text, typingSpeed = 50 }: TextProps) => {
             setTimeout(() => {
               setDisplayText((prev) => prev + value);
               resolve(null);
-            }, typingSpeed)
+            }, typingSpeed),
           );
         }
 
@@ -42,9 +42,7 @@ const TypingText = ({ text, typingSpeed = 50 }: TextProps) => {
     };
   }, [text, typingSpeed]);
 
-  return (
-    <p>{displayText}</p>
-  );
+  return <p>{displayText}</p>;
 };
 
 export default TypingText;

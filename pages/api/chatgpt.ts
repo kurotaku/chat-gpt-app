@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, OpenAIApi } from 'openai';
 import prisma from '../../utils/prisma';
 
 const configuration = new Configuration({
@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const globalPrompts = await prisma.globalPrompt.findMany();
-  const globalPromptsArray = globalPrompts.map(prompt => {
+  const globalPromptsArray = globalPrompts.map((prompt) => {
     return {
       role: 'system',
       content: prompt.content,
@@ -22,11 +22,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   let subjectPromptsArray = [];
-  if(req.body.subjectId){
+  if (req.body.subjectId) {
     const subjectPrompts = await prisma.subjectPrompt.findMany({
       where: { subjectId: req.body.subjectId },
     });
-    subjectPromptsArray = subjectPrompts.map(subjectPrompt => {
+    subjectPromptsArray = subjectPrompts.map((subjectPrompt) => {
       return {
         role: 'system',
         content: subjectPrompt.content,
@@ -34,26 +34,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const messagesArray = req.body.messages.map(data => {
+  const messagesArray = req.body.messages.map((data) => {
     return {
       role: data.role,
       content: data.content,
     };
   });
-  
-  try{
+
+  try {
     const completion = await openai.createChatCompletion({
-      model: "gpt-4",
+      model: 'gpt-4',
       // model: "gpt-3.5-turbo",
-      messages: [
-        ...globalPromptsArray,
-        ...subjectPromptsArray,
-        ...messagesArray
-      ],
+      messages: [...globalPromptsArray, ...subjectPromptsArray, ...messagesArray],
     });
 
     res.status(200).json(completion.data);
-  }catch (error) {
+  } catch (error) {
     res.status(500).json(error);
   }
 };

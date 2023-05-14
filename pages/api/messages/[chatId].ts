@@ -1,13 +1,10 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from 'next';
 import { authOptions } from '../auth/[...nextauth]';
-import { getServerSession } from "next-auth/next"
-import { PrismaClient } from "@prisma/client";
+import { getServerSession } from 'next-auth/next';
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const chatId = req.query.chatId as string;
   const session = await getServerSession(req, res, authOptions);
 
@@ -16,12 +13,12 @@ export default async function handler(
   });
 
   if (!session) {
-    res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({ message: 'Unauthorized' });
     return;
   }
 
   switch (req.method) {
-    case "GET":
+    case 'GET':
       const messages = await prisma.message.findMany({
         where: { chatId: parseInt(chatId) },
         include: {
@@ -32,7 +29,7 @@ export default async function handler(
       });
       res.status(200).json(messages);
       break;
-    case "POST":
+    case 'POST':
       const { role, content } = req.body;
       const message = await prisma.message.create({
         data: {
@@ -45,7 +42,7 @@ export default async function handler(
       res.status(200).json(message);
       break;
     default:
-      res.status(405).json({ message: "Method not allowed" });
+      res.status(405).json({ message: 'Method not allowed' });
       break;
   }
 }

@@ -62,10 +62,10 @@ model User {
 model Chat {
   id        Int       @id @default(autoincrement())
   name      String
-  userId    Int       @map(name: "user_id")
-  user      User      @relation(fields: [userId], references: [id])
+  userId    Int?       @map(name: "user_id")
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   subjectId Int?
-  subject   Subject?  @relation(fields: [subjectId], references: [id])
+  subject   Subject?  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   messages  Message[]
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @default(now()) @updatedAt @map(name: "updated_at")
@@ -131,7 +131,7 @@ model Subject {
   id        Int      @id @default(autoincrement())
   name      String
   chats     Chat[]
-  topics    SubjectPrompt[]
+  subjectPrompts    SubjectPrompt[]
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
 
@@ -141,7 +141,7 @@ model Subject {
 model SubjectPrompt {
   id        Int      @id @default(autoincrement())
   subjectId Int      @map(name: "subject_id")
-  subject   Subject  @relation(fields: [subjectId], references: [id])
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   name      String
   content   String   @db.Text
   createdAt DateTime @default(now()) @map(name: "created_at")

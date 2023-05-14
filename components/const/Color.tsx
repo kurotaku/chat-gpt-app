@@ -5,5 +5,5 @@ export default {
   ACCENT_HOVER: '#2300A8',
   BG_COLOR: '#F5F7FB',
   BORDER_COLOR: '#ECEAF4',
-  DANGER: '#E1544B'
-}
+  DANGER: '#E1544B',
+};

@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   env: {
-    NEXTAUTH_URL: "http://localhost:3000",
+    NEXTAUTH_URL: 'http://localhost:3000',
   },
   webpack(config) {
     config.resolve.alias['~'] = path.resolve(__dirname);
