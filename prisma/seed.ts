@@ -35,14 +35,14 @@ async function main() {
     })
   }
 
-  console.log('=========== Creating GlobalPrompts ===========');
-  await prisma.globalPrompt.create({
-    data: {
-      content: `
-      語尾は「にゃん」でお願いします。
-      `
-    },
-  });
+  // console.log('=========== Creating GlobalPrompts ===========');
+  // await prisma.globalPrompt.create({
+  //   data: {
+  //     content: `
+  //     語尾は「にゃん」でお願いします。
+  //     `
+  //   },
+  // });
 
   console.log('=========== API URLs ===========');
   await prisma.apiUrl.create({
@@ -83,10 +83,8 @@ async function main() {
         },
       },
       name: '太郎さんのプロフィール',
-      content: `
-        太郎さんは30歳の男性で、ソフトウェアエンジニアの仕事をしています。
-        休日は土日祝日で、趣味は犬の散歩です。
-      `
+      content: `太郎さんは30歳の男性で、ソフトウェアエンジニアの仕事をしています。
+休日は土日祝日で、趣味は犬の散歩です。`
     },
   });
   await prisma.subjectPrompt.create({
@@ -97,9 +95,7 @@ async function main() {
         },
       },
       name: '太郎さんの好きな食べ物',
-      content: `
-        太郎さんの好きな食べ物は、ケーキやアイスなどの甘いものです。
-      `
+      content: `太郎さんの好きな食べ物は、ケーキやアイスなどの甘いものです。`
     },
   });
 }

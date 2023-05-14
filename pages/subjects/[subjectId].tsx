@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSession } from "next-auth/react";
+import Link from 'next/link';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -65,7 +66,7 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
         <BorderdLinkBtn className="ml-auto" href={`/subjects/${subject.id}/subject-prompts`}>プロンプト</BorderdLinkBtn>
       </Header>
       <Breadcrumb>
-        <span>話題</span>
+        <span><Link href="/subjects">話題</Link></span>
         <i className="icon-right_arrow" />
         <span>{subject.name}</span>
       </Breadcrumb>

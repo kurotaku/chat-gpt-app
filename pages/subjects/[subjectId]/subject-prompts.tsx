@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios'
 import Link from 'next/link';
 import { PrismaClient, Subject, SubjectPrompt } from '@prisma/client';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Layout from '../../../components/Layout';
 import { AccentBtn } from '../../../components/button/Button';
 import { Header, Breadcrumb } from '../../../components/header/Header'
@@ -27,12 +29,14 @@ const SubjectPrompts = ({ subject, serverSideSubjectPrompts }: SubjectPageProps)
 
   const { data: session } = useSession()
   const [subjectPrompts, setSubjectPrompts] = useState(serverSideSubjectPrompts);
+  const [currentPrompt, setCurrentPrompt] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     watch,
     formState: { errors },
   } = useForm<FormInput>();
@@ -44,25 +48,66 @@ const SubjectPrompts = ({ subject, serverSideSubjectPrompts }: SubjectPageProps)
     setSubjectPrompts([...responce.data]);
   }
 
-  useEffect(() => {
-    fetchPrompts();
-  }, [session]);
-
-  const toggleModal = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setIsOpenModal(!isOpenModal);
-    }
+  const newPrompt = () => {
+    setValue('name', '');
+    setValue('content', '');
+    setIsOpenModal(true);
   };
 
-  const onSubmit = async (data) => {
+  const createPrompt = async (data) => {
     await axios.post('/api/subject-prompts',
       {...data, subjectId: subject.id},
       { withCredentials: true }
     );
+    toast.success('プロンプトを作成しました');
     fetchPrompts();
-    reset();
+    // reset();
+  }
+
+  const editPrompt = (prompt) => {
+    setCurrentPrompt(prompt);
+    setValue('name', prompt.name);
+    setValue('content', prompt.content);
+    setIsOpenModal(true);
+  };
+  
+  const updatePrompt = async (data) => {
+    await axios.put(`/api/subject-prompts/${currentPrompt.id}`, 
+      {...data, subjectId: subject.id},
+      { withCredentials: true }
+    );
+    toast.success('プロンプトを更新しました');
+    fetchPrompts();
+  };
+
+  const deletePrompt = async (subjectPromptId) => {
+    await axios.delete(`/api/subject-prompts/${subjectPromptId}`, { withCredentials: true });
+    toast.success('プロンプトを削除しました');
+    fetchPrompts();
+  };
+
+  const toggleModal = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setIsOpenModal(!isOpenModal);
+      setCurrentPrompt(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchPrompts();
+  }, [session]);
+
+
+  const onSubmit = async (data) => {
+    if (currentPrompt) {
+      await updatePrompt(data);
+    } else {
+      await createPrompt(data);
+    }
     setIsOpenModal(!isOpenModal);
   }
+
+  console.log('currentPrompt', currentPrompt);
 
   return (
     <Layout title={`Subject: ${subject.name}`}>
@@ -70,7 +115,7 @@ const SubjectPrompts = ({ subject, serverSideSubjectPrompts }: SubjectPageProps)
         <h1>{subject.name}に関するプロンプト一覧</h1>
       </Header>
       <Breadcrumb>
-        <span>話題</span>
+        <span><Link href="/subjects">話題</Link></span>
         <i className="icon-right_arrow" />
         <span><Link href={`/subjects/${subject.id}`}>{subject.name}</Link></span>
         <i className="icon-right_arrow" />
@@ -80,15 +125,22 @@ const SubjectPrompts = ({ subject, serverSideSubjectPrompts }: SubjectPageProps)
         <div key={index} className="bg-slate-200 p-8 mb-1">
           <h2 className="mb-2 bold">{subjectPrompt.name}</h2>
           <p>{subjectPrompt.content}</p>
+          <div className="text-right">
+            <span> [ </span>
+            <button onClick={() => editPrompt(subjectPrompt)}>編集</button>
+            <span> | </span>
+            <button onClick={() => deletePrompt(subjectPrompt.id)}>削除</button>
+            <span> ] </span>
+          </div>
         </div>
       ))}
 
-      <FloatingActionButton type="button" onClick={e => toggleModal(e)}><i className="icon-plus"></i></FloatingActionButton>
+      <FloatingActionButton type="button" onClick={() => newPrompt()}><i className="icon-plus"></i></FloatingActionButton>
 
       {isOpenModal && (
         <Modal close={toggleModal}>
           <div className="px-8">
-            <h2 className="font-bold">に関するプロンプト作成</h2>
+            <h2 className="font-bold">{subject.name}に関するプロンプト作成</h2>
             <form
               onSubmit={handleSubmit(onSubmit)}
               className='mt-8'
@@ -118,17 +170,14 @@ const SubjectPrompts = ({ subject, serverSideSubjectPrompts }: SubjectPageProps)
                 <AccentBtn
                   type="submit"
                   className="disabled:bg-gray-300"
-                  disabled={!content.trim()}
                 >
-                  作成
+                  {currentPrompt ? '更新' : '作成'}
                 </AccentBtn>
               </p>
             </form>
-          </div>
-          
+          </div>  
         </Modal>
       )}
-
     </Layout>
   );
 };

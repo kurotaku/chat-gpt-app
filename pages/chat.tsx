@@ -7,6 +7,7 @@ import { AccentBtn } from '../components/button/Button';
 import { TextArea } from '../components/form/Input';
 import Roading from '../components/form/Roading';
 import fetchCurrentUser from '../utils/fetchCurrentUser';
+import useSpeechRecognition from '../hooks/useSpeechRecognition';
 
 function autosize(textarea) {
   textarea.style.height = 'auto';
@@ -37,8 +38,16 @@ const ChatPage: React.FC<ChatPageProps> = ({ currentUser, currentSubject, chatId
   const [isLoading, setLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm();
   const [isSpeechDisabled, setIsSpeechDisabled] = useState(true);
+  const [isListening, setIsListening] = useState(false);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [recognitionResult, start, stop] = useSpeechRecognition({
+    enabled: true,
+    lang: "ja", 
+    continuous: true,
+    interimResults: true,
+  });
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
@@ -57,6 +66,19 @@ const ChatPage: React.FC<ChatPageProps> = ({ currentUser, currentSubject, chatId
   
   const handleStopSpeech = () => {
     speechSynthesis.cancel();
+  };
+
+  const toggleListening = () => {
+    if (isListening) {
+      stop();
+      setMessage(recognitionResult.finishText);
+      console.log('Interim text:', recognitionResult.interimText);
+      console.log('Final text:', recognitionResult.finishText);
+    } else {
+      start();
+    }
+  
+    setIsListening(!isListening);
   };
 
   useEffect(() => {
@@ -94,12 +116,18 @@ const ChatPage: React.FC<ChatPageProps> = ({ currentUser, currentSubject, chatId
     }
   }, [messages, isSpeechDisabled]);
 
+  useEffect(() => {
+    if (isListening) {
+      setMessage(recognitionResult.interimText);
+    }
+  }, [recognitionResult.interimText]);
+
   const onSubmit = async (data) => {
     try{
       setLoading(true);
 
       const inputText: string = message;
-
+      
       setMessage('');
       
       if (textAreaRef.current) {
@@ -174,6 +202,9 @@ const ChatPage: React.FC<ChatPageProps> = ({ currentUser, currentSubject, chatId
         </button>
         <button onClick={handleStopSpeech}>
           読み上げ停止
+        </button>
+        <button onClick={toggleListening}>
+          {isListening ? 'Stop Recognition' : 'Start Recognition'}
         </button>
       </div>
       {messages.length == 0 && <h1 className="text-center font-medium">{user?.name}さん。ChatGPTに質問してください</h1>}
