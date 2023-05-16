@@ -15,6 +15,7 @@ import Layout from '../../components/Layout';
 import Modal from '../../components/modal/Modal';
 import { BorderdLinkBtn } from '../../components/button/Button';
 import { TextField } from '../../components/form/Input';
+import { AccentBtn } from '../../components/button/Button';
 import { Header, Breadcrumb } from '../../components/header/Header';
 import FloatingActionButton from '../../components/button/FloatingActionButton';
 
@@ -152,20 +153,23 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
       )}
 
       {isOpenEditModal && (
-        <Modal close={toggleEditModal} title="Edit Subject">
-          <form onSubmit={handleSubmit(editSubject)}>
-            <label>
-              Subject Name:
+        <Modal close={toggleEditModal} title="話題の編集">
+          <div className="px-4">
+            <form onSubmit={handleSubmit(editSubject)}>
               <TextField
                 {...register('name', {
                   required: '必須項目です',
                   validate: (value) => value.trim() !== '' || 'Name cannot be empty',
                 })}
               />
-            </label>
-            {errors.name && <p>{errors.name.message}</p>}
-            <button type="submit">Update</button>
-          </form>
+              {errors.name && <p>{errors.name.message}</p>}
+              <p className='text-center'>
+              <AccentBtn type='submit'>
+                更新
+              </AccentBtn>
+              </p>
+            </form>
+          </div>
         </Modal>
       )}
     </Layout>
