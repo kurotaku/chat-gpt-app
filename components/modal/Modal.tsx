@@ -14,7 +14,7 @@ const Modal: React.FC<Props> = (props) => {
       <div className={styles.modal} onClick={props.close}>
         <div>
           <header>
-            {props.title && <div>{props.title}に関するチャット</div>}
+            {props.title && <div>{props.title}</div>}
             <button type='button' onClick={props.close} />
           </header>
           <div>{props.children}</div>

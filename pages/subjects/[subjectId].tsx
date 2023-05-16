@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import axios from 'axios';
@@ -13,6 +14,7 @@ import styled from 'styled-components';
 import Layout from '../../components/Layout';
 import Modal from '../../components/modal/Modal';
 import { BorderdLinkBtn } from '../../components/button/Button';
+import { TextField } from '../../components/form/Input';
 import { Header, Breadcrumb } from '../../components/header/Header';
 import FloatingActionButton from '../../components/button/FloatingActionButton';
 
@@ -29,17 +31,41 @@ type SubjectPageProps = {
 };
 
 const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
+  type FormInput = {
+    name: string;
+  };
+
   const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<FormInput>();
 
   const { data: session } = useSession();
   const [user, setUser] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [chats, setChats] = useState(serverSideChats);
   const [selectedChatId, setSelectedChatId] = useState(null);
 
   const fetchChats = async () => {
     const responce = await axios.get(`/api/chats?subjectId=${subject.id}`);
     setChats([...responce.data]);
+  };
+
+  const editSubject = async (data) => {
+    try {
+      await axios.put(`/api/subjects/${subject.id}`, data, { withCredentials: true });
+      router.push('/subjects?updated=true');
+    } catch (error) {
+      toast.error('エラーが発生しました');
+      console.error('An error occurred while updating the subject:', error);
+    }
   };
 
   const deleteSubject = async (subjectId) => {
@@ -54,16 +80,6 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
     }
   };
 
-  useEffect(() => {
-    const getUser = async () => {
-      const fetchedUser = await fetchCurrentUser(session);
-      setUser(fetchedUser);
-    };
-    getUser();
-
-    chats || fetchChats();
-  }, [session]);
-
   const toggleModal = (e: React.MouseEvent, chatId: number | null = null) => {
     setSelectedChatId(chatId);
     if (e.target === e.currentTarget) {
@@ -71,13 +87,31 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
     }
   };
 
+  const toggleEditModal = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setIsOpenEditModal(!isOpenEditModal);
+      setValue('name', subject.name);
+    }
+  };
+
+  useEffect(() => {
+    const getUser = async () => {
+      const fetchedUser = await fetchCurrentUser(session);
+      setUser(fetchedUser);
+    };
+    getUser();5
+
+    chats || fetchChats();
+  }, [session]);
+
   return (
     <Layout title={`Subject: ${subject.name}`}>
       <Header>
         <h1>{subject.name}</h1>
         <div className='ml-auto mr-2'>
           {/* <button onClick={() => editPrompt(subjectPrompt)}>編集</button> */}
-          <button onClick={() => deleteSubject(subject.id)}>削除</button>
+          <button onClick={(e) => toggleEditModal(e)}><i className="icon-pen events-none" /></button>
+          <button onClick={() => deleteSubject(subject.id)}><i className="icon-trash" /></button>
         </div>
         <BorderdLinkBtn href={`/subjects/${subject.id}/subject-prompts`}>プロンプト</BorderdLinkBtn>
       </Header>
@@ -114,6 +148,24 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
               onChatUpdated={fetchChats}
             />
           </div>
+        </Modal>
+      )}
+
+      {isOpenEditModal && (
+        <Modal close={toggleEditModal} title="Edit Subject">
+          <form onSubmit={handleSubmit(editSubject)}>
+            <label>
+              Subject Name:
+              <TextField
+                {...register('name', {
+                  required: '必須項目です',
+                  validate: (value) => value.trim() !== '' || 'Name cannot be empty',
+                })}
+              />
+            </label>
+            {errors.name && <p>{errors.name.message}</p>}
+            <button type="submit">Update</button>
+          </form>
         </Modal>
       )}
     </Layout>
