@@ -44,7 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const completion = await openai.createChatCompletion({
       // model: 'gpt-4',
-      model: "gpt-3.5-turbo",
+      model: 'gpt-3.5-turbo',
       messages: [...globalPromptsArray, ...subjectPromptsArray, ...messagesArray],
     });
 

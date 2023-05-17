@@ -212,13 +212,14 @@ const ChatPage: React.FC<ChatPageProps> = ({
 
   return (
     <div>
-      <div className='flex'>
+      {/* TODO */}
+      {/* <div className='flex'>
         <button onClick={handleToggleSpeech}>{isSpeechDisabled ? '音声off' : '音声on'}</button>
         <button onClick={handleStopSpeech}>読み上げ停止</button>
         <button onClick={toggleListening}>
           {isListening ? 'Stop Recognition' : 'Start Recognition'}
         </button>
-      </div>
+      </div> */}
       {messages.length == 0 && (
         <h1 className='text-center font-medium'>{user?.name}さん。ChatGPTに質問してください</h1>
       )}

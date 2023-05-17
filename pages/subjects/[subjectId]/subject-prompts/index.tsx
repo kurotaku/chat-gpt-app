@@ -6,12 +6,12 @@ import axios from 'axios';
 import Link from 'next/link';
 import { PrismaClient, Subject, SubjectPrompt } from '@prisma/client';
 import { toast } from 'react-toastify';
-import Layout from '../../../components/Layout';
-import { AccentBtn } from '../../../components/button/Button';
-import { Header, Breadcrumb } from '../../../components/header/Header';
-import { TextField } from '../../../components/form/Input';
-import Modal from '../../../components/modal/Modal';
-import FloatingActionButton from '../../../components/button/FloatingActionButton';
+import Layout from '../../../../components/Layout';
+import { AccentBtn } from '../../../../components/button/Button';
+import { Header, Breadcrumb } from '../../../../components/header/Header';
+import { TextField } from '../../../../components/form/Input';
+import Modal from '../../../../components/modal/Modal';
+import FloatingActionButton from '../../../../components/button/FloatingActionButton';
 
 const prisma = new PrismaClient();
 
@@ -43,8 +43,8 @@ const SubjectPrompts = ({ subject, serverSideSubjectPrompts }: SubjectPageProps)
   const content = watch('content', '');
 
   const fetchPrompts = async () => {
-    const responce = await axios.get(`/api/subject-prompts?subjectId=${subject.id}`);
-    setSubjectPrompts([...responce.data]);
+    const response = await axios.get(`/api/subject-prompts?subjectId=${subject.id}`);
+    setSubjectPrompts([...response.data]);
   };
 
   const newPrompt = () => {
@@ -132,11 +132,12 @@ const SubjectPrompts = ({ subject, serverSideSubjectPrompts }: SubjectPageProps)
           <h2 className='mb-2 bold'>{subjectPrompt.name}</h2>
           <p>{subjectPrompt.content}</p>
           <div className='text-right'>
-            <span> [ </span>
-            <button onClick={() => editPrompt(subjectPrompt)}>編集</button>
-            <span> | </span>
-            <button onClick={() => deletePrompt(subjectPrompt.id)}>削除</button>
-            <span> ] </span>
+            <button onClick={() => editPrompt(subjectPrompt)}>
+              <i className='icon-pen events-none text-2xl' />
+            </button>
+            <button onClick={() => deletePrompt(subjectPrompt.id)}>
+              <i className='icon-trash text-2xl' />
+            </button>
           </div>
         </div>
       ))}
@@ -148,7 +149,9 @@ const SubjectPrompts = ({ subject, serverSideSubjectPrompts }: SubjectPageProps)
       {isOpenModal && (
         <Modal close={toggleModal}>
           <div className='px-8'>
-            <h2 className='font-bold'>{subject.name}に関するプロンプト作成</h2>
+            <h2 className='font-bold'>
+              {subject.name}に関するプロンプト{currentPrompt ? '編集' : '作成'}
+            </h2>
             <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
               <div className='mb-4'>
                 <TextField

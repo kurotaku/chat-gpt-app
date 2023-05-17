@@ -31,7 +31,7 @@ type SubjectPageProps = {
   serverSideChats: Chat[];
 };
 
-const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
+const SubjectPage = ({ subject: subjectProp, serverSideChats }: SubjectPageProps) => {
   type FormInput = {
     name: string;
   };
@@ -51,18 +51,23 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
   const [user, setUser] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [subject, setSubject] = useState<Subject>(subjectProp);
   const [chats, setChats] = useState(serverSideChats);
   const [selectedChatId, setSelectedChatId] = useState(null);
 
   const fetchChats = async () => {
-    const responce = await axios.get(`/api/chats?subjectId=${subject.id}`);
-    setChats([...responce.data]);
+    const getChats = await axios.get(`/api/chats?subjectId=${subject.id}`);
+    setChats([...getChats.data]);
   };
 
-  const editSubject = async (data) => {
+  const updateSubject = async (data) => {
     try {
-      await axios.put(`/api/subjects/${subject.id}`, data, { withCredentials: true });
-      router.push('/subjects?updated=true');
+      const response = await axios.put(`/api/subjects/${subject.id}`, data, {
+        withCredentials: true,
+      });
+      setIsOpenEditModal(!isOpenEditModal);
+      setSubject(response.data);
+      toast.success('更新しました');
     } catch (error) {
       toast.error('エラーが発生しました');
       console.error('An error occurred while updating the subject:', error);
@@ -78,6 +83,19 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
     } catch (error) {
       toast.error('エラーが発生しました');
       console.error('An error occurred while deleting the subject:', error);
+    }
+  };
+
+  const deleteChat = async (chatId) => {
+    try {
+      if (window.confirm('本当に削除してよろしいですか？')) {
+        await axios.delete(`/api/chats/${chatId}`, { withCredentials: true });
+        toast.success('チャットを削除しました');
+        fetchChats();
+      }
+    } catch (error) {
+      toast.error('エラーが発生しました');
+      console.error('An error occurred while deleting the chat:', error);
     }
   };
 
@@ -100,7 +118,8 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
       const fetchedUser = await fetchCurrentUser(session);
       setUser(fetchedUser);
     };
-    getUser();5
+    getUser();
+    5;
 
     chats || fetchChats();
   }, [session]);
@@ -109,10 +128,14 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
     <Layout title={`Subject: ${subject.name}`}>
       <Header>
         <h1>{subject.name}</h1>
-        <div className='ml-auto mr-2'>
+        <div className='ml-auto mr-4'>
           {/* <button onClick={() => editPrompt(subjectPrompt)}>編集</button> */}
-          <button onClick={(e) => toggleEditModal(e)}><i className="icon-pen events-none" /></button>
-          <button onClick={() => deleteSubject(subject.id)}><i className="icon-trash" /></button>
+          <button onClick={(e) => toggleEditModal(e)}>
+            <i className='icon-pen events-none text-2xl mr-1' />
+          </button>
+          <button onClick={() => deleteSubject(subject.id)}>
+            <i className='icon-trash text-2xl' />
+          </button>
         </div>
         <BorderdLinkBtn href={`/subjects/${subject.id}/subject-prompts`}>プロンプト</BorderdLinkBtn>
       </Header>
@@ -132,6 +155,9 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
         >
           <p className='text-xs text-gray-400 mb-1'>{formatDate(chat.createdAt.toString())}</p>
           {chat.name}
+          <button onClick={() => deleteChat(chat.id)}>
+            <i className='icon-trash text-2xl absolute right-3' />
+          </button>
         </ChatItem>
       ))}
 
@@ -140,7 +166,7 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
       </FloatingActionButton>
 
       {isOpenModal && (
-        <Modal close={toggleModal} title={subject.name}>
+        <Modal close={toggleModal} title={`${subject.name}に関するチャット`}>
           <div className='pb-4'>
             <ChatPage
               currentUser={user}
@@ -153,9 +179,9 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
       )}
 
       {isOpenEditModal && (
-        <Modal close={toggleEditModal} title="話題の編集">
-          <div className="px-4">
-            <form onSubmit={handleSubmit(editSubject)}>
+        <Modal close={toggleEditModal} title='話題の編集'>
+          <div className='px-4'>
+            <form onSubmit={handleSubmit(updateSubject)}>
               <TextField
                 {...register('name', {
                   required: '必須項目です',
@@ -164,9 +190,7 @@ const SubjectPage = ({ subject, serverSideChats }: SubjectPageProps) => {
               />
               {errors.name && <p>{errors.name.message}</p>}
               <p className='text-center'>
-              <AccentBtn type='submit'>
-                更新
-              </AccentBtn>
+                <AccentBtn type='submit'>更新</AccentBtn>
               </p>
             </form>
           </div>

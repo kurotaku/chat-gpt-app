@@ -1,4 +1,6 @@
 import { GetServerSideProps } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
@@ -22,6 +24,8 @@ type SubjectsIndexProps = {
 };
 
 const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
+  const { t } = useTranslation('common');
+
   type FormInput = {
     name: string;
   };
@@ -78,12 +82,13 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
   };
 
   return (
-    <Layout title='Subject'>
+    <Layout title={t('subject.modelName')}>
       <Header>
-        <h1>話題</h1>
+        <h1>{t('subject.modelName')}</h1>
       </Header>
       {subjects?.map((subject, index) => (
         <Link
+          key={index}
           href={`/subjects/${subject.id}`}
           className='block bg-slate-200 hover:bg-slate-300 p-8 mb-1'
         >
@@ -98,7 +103,7 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
       {isOpenModal && (
         <Modal close={toggleModal}>
           <div className='px-8'>
-            <h2 className='font-bold'>話題作成</h2>
+            <h2 className='font-bold'>{t('subject.modelName')}作成</h2>
             <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
               <div className='mb-4'>
                 <TextField
@@ -106,7 +111,7 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
                     required: '必須項目です',
                     validate: (value) => value.trim() !== '' || 'Name cannot be empty',
                   })}
-                  placeholder='話題名'
+                  placeholder={t('subject.name')}
                 />
                 {errors.name && <p className='text-red-600'>{errors.name.message}</p>}
               </div>
@@ -126,7 +131,7 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
 
 export default SubjectsIndex;
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const response = await prisma.subject.findMany();
   const serverSideSubjects = response.map((subject) => ({
     ...subject,
@@ -137,6 +142,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {
       serverSideSubjects,
+      ...(await serverSideTranslations(context.defaultLocale || 'ja', ['common'])),
     },
   };
 };
