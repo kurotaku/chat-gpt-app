@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, getSession } from 'next-auth/react';
 import axios from 'axios';
 import fetchCurrentUser from '../utils/fetchCurrentUser';
 import { formatDate } from '../utils/formatDate';
@@ -109,6 +109,11 @@ const IndexPage = ({ serverSideChats }: IndexProps) => {
 export default IndexPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (!session) {
+    return { props: {} }
+  }
+
   const response = await prisma.chat.findMany({
     where: {
       subjectId: null,

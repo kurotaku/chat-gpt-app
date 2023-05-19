@@ -75,6 +75,20 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
             </Link>
           </li>
           <li className='mb-4'>
+            <Link href='/myteam'>
+              <Icon
+                className={`icon-people ${router.pathname.startsWith('/myteam') ? 'current' : ''}`}
+              />
+            </Link>
+          </li>
+          <li className='mb-4'>
+            <Link href='/profile'>
+              <Icon
+                className={`icon-user ${router.pathname.startsWith('/profile') ? 'current' : ''}`}
+              />
+            </Link>
+          </li>
+          <li className='mb-4'>
             <Link href='/setting/global-prompts'>
               <Icon
                 className={`icon-setting ${

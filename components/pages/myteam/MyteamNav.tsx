@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import PageNav from '../../navigation/PageNav';
 
-const SettingNav = () => {
+const MyteamNav = () => {
   const router = useRouter();
 
   return (
@@ -16,16 +16,8 @@ const SettingNav = () => {
           システムプロンプト
         </Link>
       </li>
-      <li>
-        <Link
-          className={`${router.pathname === '/setting/api-urls' ? 'current' : ''}`}
-          href='/setting/api-urls'
-        >
-          API URL
-        </Link>
-      </li>
     </PageNav>
   );
 };
 
-export default SettingNav;
+export default MyteamNav;

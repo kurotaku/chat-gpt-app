@@ -5,10 +5,22 @@ import { faker } from '@faker-js/faker';
 const prisma = new PrismaClient();
 
 async function main() {
+  console.log('=========== Creating Teams ===========');
+  const testTeam = await prisma.team.create({
+    data: {
+      name: 'テストチーム',
+    },
+  });
+
   console.log('=========== Creating Users ===========');
 
   await prisma.user.create({
     data: {
+      team: {
+        connect: {
+          id: testTeam.id
+        }
+      },
       name: 'テストユーザー',
       email: 'test@test.com',
       password: bcrypt.hashSync('password', 10),
@@ -28,6 +40,11 @@ async function main() {
 
     await prisma.user.create({
       data: {
+        team: {
+          connect: {
+            id: testTeam.id
+          }
+        },
         name: name,
         email: email,
         password: password,
@@ -77,6 +94,11 @@ async function main() {
   console.log('=========== SubjectPrompt ===========');
   await prisma.subjectPrompt.create({
     data: {
+      team: {
+        connect: {
+          id: testTeam.id
+        }
+      },
       subject: {
         connect: {
           id: subject1.id,
@@ -89,6 +111,11 @@ async function main() {
   });
   await prisma.subjectPrompt.create({
     data: {
+      team: {
+        connect: {
+          id: testTeam.id
+        }
+      },
       subject: {
         connect: {
           id: subject1.id,

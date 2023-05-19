@@ -16,6 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // If there is a session, find the user by email
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
+    include: { team: true }
   });
 
   if (!user) {

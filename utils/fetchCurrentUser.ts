@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-async function fetchCurrentUser(session) {
+async function fetchCurrentUser() {
   try {
     const response = await axios.get('/api/users/current-user');
     return response.data;

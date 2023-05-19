@@ -43,26 +43,75 @@ model Session {
   @@map(name: "sessions")
 }
 
-model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  password  String
-  chats     Chat[]
-  messages  Message[]
-  accounts  Account[]
-  sessions  Session[]
-  GPTLogs   GptLog[]
-  createdAt DateTime  @default(now()) @map(name: "created_at")
-  updatedAt DateTime  @default(now()) @updatedAt @map(name: "updated_at")
+model Team {
+  id             Int             @id @default(autoincrement())
+  name           String
+  users          User[]
+  createdAt      DateTime        @default(now()) @map(name: "created_at")
+  updatedAt      DateTime        @default(now()) @updatedAt @map(name: "updated_at")
+  Chat           Chat[]
+  TeamPrompts    TeamPrompt[]
+  subjectPrompts SubjectPrompt[]
+  userPrompts    UserPrompt[]
 
+  @@map(name: "teams")
+}
+
+model TeamPrompt {
+  id        Int      @id @default(autoincrement())
+  teamId    Int      @map(name: "team_id")
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  name      String
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@index([teamId], name: "teamId")
+  @@map(name: "team_prompts")
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  name        String
+  email       String       @unique
+  password    String
+  teamId      Int          @map(name: "team_id")
+  team        Team         @relation(fields: [teamId], references: [id])
+  chats       Chat[]
+  messages    Message[]
+  accounts    Account[]
+  sessions    Session[]
+  userPrompts UserPrompt[]
+  GPTLogs     GptLog[]
+  createdAt   DateTime     @default(now()) @map(name: "created_at")
+  updatedAt   DateTime     @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@index([teamId], name: "teamId")
   @@map(name: "users")
+}
+
+model UserPrompt {
+  id        Int      @id @default(autoincrement())
+  teamId    Int      @map(name: "team_id")
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId    Int      @map(name: "user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@index([teamId], name: "teamId")
+  @@index([userId], name: "userId")
+  @@map(name: "user_prompts")
 }
 
 model Chat {
   id        Int       @id @default(autoincrement())
   name      String
-  userId    Int?       @map(name: "user_id")
+  teamId    Int       @map(name: "team_id")
+  team      Team      @relation(fields: [teamId], references: [id])
+  userId    Int?      @map(name: "user_id")
   user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   subjectId Int?
   subject   Subject?  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
@@ -70,6 +119,7 @@ model Chat {
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @default(now()) @updatedAt @map(name: "updated_at")
 
+  @@index([teamId], name: "teamId")
   @@index([subjectId], name: "subjectId")
   @@map(name: "chats")
 }
@@ -128,18 +178,20 @@ model GptLog {
 }
 
 model Subject {
-  id        Int      @id @default(autoincrement())
-  name      String
-  chats     Chat[]
-  subjectPrompts    SubjectPrompt[]
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+  id             Int             @id @default(autoincrement())
+  name           String
+  chats          Chat[]
+  subjectPrompts SubjectPrompt[]
+  createdAt      DateTime        @default(now()) @map(name: "created_at")
+  updatedAt      DateTime        @default(now()) @updatedAt @map(name: "updated_at")
 
   @@map(name: "subjects")
 }
 
 model SubjectPrompt {
   id        Int      @id @default(autoincrement())
+  teamId    Int      @map(name: "team_id")
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   subjectId Int      @map(name: "subject_id")
   subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   name      String
@@ -147,6 +199,7 @@ model SubjectPrompt {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
 
+  @@index([teamId], name: "teamId")
   @@index([subjectId], name: "subjectId")
   @@map(name: "subject_prompts")
 }
