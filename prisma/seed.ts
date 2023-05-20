@@ -8,7 +8,21 @@ async function main() {
   console.log('=========== Creating Teams ===========');
   const testTeam = await prisma.team.create({
     data: {
-      name: 'テストチーム',
+      name: '株式会社ギルド',
+    },
+  });
+
+  console.log('=========== TeramPrompt ===========');
+  await prisma.teamPrompt.create({
+    data: {
+      team: {
+        connect: {
+          id: testTeam.id
+        }
+      },
+      name: 'ギルドについて',
+      content: `株式会社ギルドに所属する我々は、冒険者としてこの辺境の地、ミッドガルドにて、冒険者という業務を行い売り上げを立てています。
+危険な場所であるダンジョンを探索し、そこに生息するモンスターを倒したり、貴重なアイテムを収集すると売り上げが上がります。`,
     },
   });
 

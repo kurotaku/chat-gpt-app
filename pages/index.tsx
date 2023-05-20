@@ -60,7 +60,7 @@ const IndexPage = ({ serverSideChats }: IndexProps) => {
 
   useEffect(() => {
     const getUser = async () => {
-      const fetchedUser = await fetchCurrentUser(session);
+      const fetchedUser = await fetchCurrentUser();
       setUser(fetchedUser);
     };
     getUser();

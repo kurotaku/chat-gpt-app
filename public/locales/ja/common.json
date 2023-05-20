@@ -1,24 +1,13 @@
 {
   "home": "ホーム",
-  "team": {
-    "modelName": "チーム",
-    "name": "チーム名"
+  "models": {
+    "team": "チーム",
+    "user": "ユーザー",
+    "chat": "チャット",
+    "subject": "話題",
+    "globalPrompt": "システム全体で使うプロンプト"
   },
   "myteam": "あなたのチーム",
-  "user": {
-    "name": "ユーザー名"
-  },
   "profile": "プロフィール",
-  "chat": {
-    "name": "チャット名"
-  },
-  "subject": {
-    "modelName": "話題",
-    "name": "話題名"
-  },
-  "globalPrompt": {
-    "modelName": "システム全体で使うプロンプト"
-  },
-  
   "prompt": "プロンプト"
 }

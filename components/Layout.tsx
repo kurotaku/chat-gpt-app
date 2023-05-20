@@ -75,9 +75,9 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
             </Link>
           </li>
           <li className='mb-4'>
-            <Link href='/myteam'>
+            <Link href='/myteam/users'>
               <Icon
-                className={`icon-people ${router.pathname.startsWith('/myteam') ? 'current' : ''}`}
+                className={`icon-people ${router.pathname.startsWith('/myteam/users') ? 'current' : ''}`}
               />
             </Link>
           </li>
