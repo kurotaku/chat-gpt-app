@@ -30,6 +30,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: {
             name: req.body.name,
             ...(req.body.subjectId && {
+              team: {
+                connect: {
+                  id: user.teamId
+                }
+              },
               subject: {
                 connect: {
                   id: req.body.subjectId,

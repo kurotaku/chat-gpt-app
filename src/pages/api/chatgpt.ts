@@ -38,6 +38,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     };
   });
 
+  const teamPrompts = await prisma.teamPrompt.findMany({
+    where: {teamId: user.teamId}
+  });
+  const teamPromptsArray = teamPrompts.map((prompt) => {
+    return {
+      role: 'system',
+      content: prompt.content,
+    };
+  });
+
   let subjectPromptsArray = [];
   if (req.body.subjectId) {
     const subjectPrompts = await prisma.subjectPrompt.findMany({
@@ -62,7 +72,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const completion = await openai.createChatCompletion({
       // model: 'gpt-4',
       model: 'gpt-3.5-turbo',
-      messages: [...globalPromptsArray, ...subjectPromptsArray, ...messagesArray],
+      messages: [...globalPromptsArray, ...teamPromptsArray, ...subjectPromptsArray, ...messagesArray],
     });
 
     res.status(200).json(completion.data);
