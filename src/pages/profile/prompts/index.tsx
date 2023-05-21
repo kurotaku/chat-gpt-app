@@ -10,7 +10,7 @@ import { SerializableUser, SerializableTeam } from '../../../types/types';
 import { getCommonProps } from '../../../utils/getCommonProps';
 import Layout from '../../../components/Layout';
 import { Header, Breadcrumb } from '../../../components/header/Header';
-import MyteamNav from '../../../components/pages/myteam/MyteamNav';
+import ProfileNav from '../../../components/pages/profile/ProfileNav';
 import { TextField } from '../../../components/form/Input';
 import { AccentBtn } from '../../../components/button/Button';
 import Modal from '../../../components/modal/Modal';
@@ -51,7 +51,7 @@ const myteamUsers = (props: Props) => {
   } = useForm<FormInput>();
 
   const fetchPrompts = async () => {
-    const response = await axios.get(`/api/team-prompts?teamId=${props.user.teamId}`);
+    const response = await axios.get(`/api/user-prompts?teamId=${props.user.teamId}`);
     setPrompts([...response.data]);
   };
 
@@ -63,7 +63,7 @@ const myteamUsers = (props: Props) => {
 
   const createPrompt = async (data) => {
     await axios.post(
-      '/api/team-prompts',
+      '/api/user-prompts',
       { ...data, teamId: props.user.teamId },
       { withCredentials: true },
     );
@@ -80,7 +80,7 @@ const myteamUsers = (props: Props) => {
 
   const updatePrompt = async (data) => {
     await axios.put(
-      `/api/team-prompts/${currentPrompt.id}`,
+      `/api/user-prompts/${currentPrompt.id}`,
       { ...data, teamId: props.user.teamId },
       { withCredentials: true },
     );
@@ -90,7 +90,7 @@ const myteamUsers = (props: Props) => {
 
   const deletePrompt = async (subjectPromptId) => {
     if (window.confirm('本当に削除してよろしいですか？')) {
-      await axios.delete(`/api/team-prompts/${subjectPromptId}`, { withCredentials: true });
+      await axios.delete(`/api/user-prompts/${subjectPromptId}`, { withCredentials: true });
       toast.success('プロンプトを削除しました');
       fetchPrompts();
     }
@@ -113,18 +113,18 @@ const myteamUsers = (props: Props) => {
   };
 
   return (
-    <Layout title={t('myteam')}>
+    <Layout title={t('profile')}>
       <Header>
-        <h1>{t('myteam')}</h1>
+        <h1>{t('profile')}</h1>
       </Header>
       <Breadcrumb>
-        <span>{t('myteam')}</span>
+        <span>{t('profile')}</span>
         <i className='icon-right_arrow' />
         <span>{t('prompt')}</span>
       </Breadcrumb>
 
       <div className='flex'>
-        <MyteamNav />
+        <ProfileNav />
         <div className='p-8'>
           {prompts?.map((prompt, index) => (
             <div key={index} className='bg-slate-200 p-8 mb-1'>
@@ -151,7 +151,7 @@ const myteamUsers = (props: Props) => {
         <Modal close={toggleModal}>
           <div className='px-8'>
             <h2 className='font-bold'>
-              {t('models.teamPrompt')}{currentPrompt ? '編集' : '作成'}
+              {t('models.userPrompt')}{currentPrompt ? '編集' : '作成'}
             </h2>
             <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
               <div className='mb-4'>
@@ -197,9 +197,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { props: {} };
   }
 
-  const prompts: PromptSubset[] = await prisma.teamPrompt.findMany({
+  const prompts: PromptSubset[] = await prisma.userPrompt.findMany({
     where: {
-      teamId: commonProps.user.teamId,
+      userId: commonProps.user.id,
     },
     select: {
       id: true,

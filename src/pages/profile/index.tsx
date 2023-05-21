@@ -8,7 +8,8 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Layout from '../../components/Layout';
-import { Header } from '../../components/header/Header';
+import { Header, Breadcrumb } from '../../components/header/Header';
+import ProfileNav from '../../components/pages/profile/ProfileNav';
 
 const Profile = () => {
   const { t } = useTranslation('common');
@@ -29,27 +30,33 @@ const Profile = () => {
       <Header>
         <h1>{t('profile')}</h1>
       </Header>
+      <Breadcrumb>
+        <span>{t('profile')}</span>
+      </Breadcrumb>
 
-      <div className='p-8'>
-        {user && (
-          <table>
-            <tbody>
-              <tr>
-                <th></th>
-                <td>{user.name}</td>
-              </tr>
-              <tr>
-                <th></th>
-                <td>{user.team.name}</td>
-              </tr>
-              <tr>
-                <th></th>
-                <td>{user.email}</td>
-              </tr>
-            </tbody>
-          </table>
-        )}
-      </div>
+      <div className='flex'>
+        <ProfileNav />
+        <div className='p-8'>
+          {user && (
+            <table>
+              <tbody>
+                <tr>
+                  <th></th>
+                  <td>{user.name}</td>
+                </tr>
+                <tr>
+                  <th></th>
+                  <td>{user.team.name}</td>
+                </tr>
+                <tr>
+                  <th></th>
+                  <td>{user.email}</td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>      
     </Layout>
   );
 };

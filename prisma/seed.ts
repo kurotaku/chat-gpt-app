@@ -5,10 +5,19 @@ import { faker } from '@faker-js/faker';
 const prisma = new PrismaClient();
 
 async function main() {
+  console.log('=========== Creating GlobalPrompts ===========');
+  await prisma.globalPrompt.create({
+    data: {
+      content: `
+      語尾は「わん」でお願いします。
+      `
+    },
+  });
+
   console.log('=========== Creating Teams ===========');
   const testTeam = await prisma.team.create({
     data: {
-      name: '株式会社ギルド',
+      name: '株式会社わんわん',
     },
   });
 
@@ -20,15 +29,16 @@ async function main() {
           id: testTeam.id,
         },
       },
-      name: 'ギルドについて',
-      content: `株式会社ギルドに所属する我々は、冒険者としてこの辺境の地、ミッドガルドにて、冒険者という業務を行い売り上げを立てています。
-危険な場所であるダンジョンを探索し、そこに生息するモンスターを倒したり、貴重なアイテムを収集すると売り上げが上がります。`,
+      name: 'わんわんについて',
+      content: `株式会社わんわんでは、いわゆる犬の芸をすることによって報酬を得ています。
+おて、おかわり、おすわり、ふせなどです。
+また散歩は朝、夕、毎日2回行っていますが、それも報酬が発生します。`,
     },
   });
 
   console.log('=========== Creating Users ===========');
 
-  await prisma.user.create({
+  const testUser = await prisma.user.create({
     data: {
       team: {
         connect: {
@@ -66,14 +76,24 @@ async function main() {
     });
   }
 
-  // console.log('=========== Creating GlobalPrompts ===========');
-  // await prisma.globalPrompt.create({
-  //   data: {
-  //     content: `
-  //     語尾は「にゃん」でお願いします。
-  //     `
-  //   },
-  // });
+  console.log('=========== UserPrompt ===========');
+  await prisma.userPrompt.create({
+    data: {
+      team: {
+        connect: {
+          id: testTeam.id,
+        },
+      },
+      user: {
+        connect: {
+          id: testUser.id
+        }
+      },
+      name: '私が得意なこと',
+      content: `私はおてとおかわりが得意です。会社では通常散歩は2回ですが、私は3回行けます。
+また、会社の通常の芸の他に、ジャンプ、くるりんができます。`,
+    },
+  });
 
   console.log('=========== API URLs ===========');
   await prisma.apiUrl.create({

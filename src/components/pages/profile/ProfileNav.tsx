@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import PageNav from '../../navigation/PageNav';
 
-const MyteamNav = () => {
+const ProfileNav = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
 
@@ -12,16 +12,16 @@ const MyteamNav = () => {
     <PageNav>
       <li>
         <Link
-          className={`${router.pathname === '/myteam/users' ? 'current' : ''}`}
-          href='/myteam/users'
+          className={`${router.pathname === '/profile' ? 'current' : ''}`}
+          href='/profile'
         >
-          {t('models.user')}
+          {t('profile')}
         </Link>
       </li>
       <li>
         <Link
-          className={`${router.pathname === '/myteam/prompts' ? 'current' : ''}`}
-          href='/myteam/prompts'
+          className={`${router.pathname === '/profile/prompts' ? 'current' : ''}`}
+          href='/profile/prompts'
         >
           {t('prompt')}
         </Link>
@@ -30,4 +30,4 @@ const MyteamNav = () => {
   );
 };
 
-export default MyteamNav;
+export default ProfileNav;

@@ -48,6 +48,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     };
   });
 
+  const userPrompts = await prisma.userPrompt.findMany({
+    where: {teamId: user.teamId}
+  });
+  const userPromptsArray = userPrompts.map((prompt) => {
+    return {
+      role: 'system',
+      content: prompt.content,
+    };
+  });
+
   let subjectPromptsArray = [];
   if (req.body.subjectId) {
     const subjectPrompts = await prisma.subjectPrompt.findMany({
@@ -69,7 +79,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const totalPrompts = [
-    ...globalPromptsArray, ...teamPromptsArray, ...subjectPromptsArray
+    ...globalPromptsArray, ...teamPromptsArray, ...userPromptsArray, ...subjectPromptsArray
   ]
 
   try {

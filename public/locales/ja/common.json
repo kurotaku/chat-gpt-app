@@ -5,7 +5,9 @@
     "user": "ユーザー",
     "chat": "チャット",
     "subject": "話題",
-    "globalPrompt": "システム全体で使うプロンプト"
+    "globalPrompt": "システム全体で使用するプロンプト",
+    "teamPrompt": "チームで共通で使用するプロンプト",
+    "userPrompt": "ユーザー単位のプロンプト"
   },
   "myteam": "あなたのチーム",
   "profile": "プロフィール",
