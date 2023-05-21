@@ -17,8 +17,8 @@ async function main() {
     data: {
       team: {
         connect: {
-          id: testTeam.id
-        }
+          id: testTeam.id,
+        },
       },
       name: 'ギルドについて',
       content: `株式会社ギルドに所属する我々は、冒険者としてこの辺境の地、ミッドガルドにて、冒険者という業務を行い売り上げを立てています。
@@ -32,8 +32,8 @@ async function main() {
     data: {
       team: {
         connect: {
-          id: testTeam.id
-        }
+          id: testTeam.id,
+        },
       },
       name: 'テストユーザー',
       email: 'test@test.com',
@@ -56,8 +56,8 @@ async function main() {
       data: {
         team: {
           connect: {
-            id: testTeam.id
-          }
+            id: testTeam.id,
+          },
         },
         name: name,
         email: email,
@@ -110,8 +110,8 @@ async function main() {
     data: {
       team: {
         connect: {
-          id: testTeam.id
-        }
+          id: testTeam.id,
+        },
       },
       subject: {
         connect: {
@@ -127,8 +127,8 @@ async function main() {
     data: {
       team: {
         connect: {
-          id: testTeam.id
-        }
+          id: testTeam.id,
+        },
       },
       subject: {
         connect: {
