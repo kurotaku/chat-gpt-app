@@ -47,12 +47,13 @@ const ChatPage: React.FC<ChatPageProps> = ({
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const [recognitionResult, start, stop] = useSpeechRecognition({
-    enabled: true,
-    lang: 'ja',
-    continuous: true,
-    interimResults: true,
-  });
+  // TODO
+  // const [recognitionResult, start, stop] = useSpeechRecognition({
+  //   enabled: true,
+  //   lang: 'ja',
+  //   continuous: true,
+  //   interimResults: true,
+  // });
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
@@ -65,30 +66,31 @@ const ChatPage: React.FC<ChatPageProps> = ({
     return apiUrl ? apiUrl.id : null;
   };
 
-  const handleToggleSpeech = () => {
-    setIsSpeechDisabled(!isSpeechDisabled);
-  };
+  // TODO
+  // const handleToggleSpeech = () => {
+  //   setIsSpeechDisabled(!isSpeechDisabled);
+  // };
 
-  const handleStopSpeech = () => {
-    speechSynthesis.cancel();
-  };
+  // const handleStopSpeech = () => {
+  //   speechSynthesis.cancel();
+  // };
 
-  const toggleListening = () => {
-    if (isListening) {
-      stop();
-      setMessage(recognitionResult.finishText);
-      console.log('Interim text:', recognitionResult.interimText);
-      console.log('Final text:', recognitionResult.finishText);
-    } else {
-      start();
-    }
+  // const toggleListening = () => {
+  //   if (isListening) {
+  //     stop();
+  //     setMessage(recognitionResult.finishText);
+  //     console.log('Interim text:', recognitionResult.interimText);
+  //     console.log('Final text:', recognitionResult.finishText);
+  //   } else {
+  //     start();
+  //   }
 
-    setIsListening(!isListening);
-  };
+  //   setIsListening(!isListening);
+  // };
 
   useEffect(() => {
     const getUser = async () => {
-      const fetchedUser = await fetchCurrentUser(session);
+      const fetchedUser = await fetchCurrentUser();
       setUser(fetchedUser);
     };
     user || getUser();
@@ -124,11 +126,12 @@ const ChatPage: React.FC<ChatPageProps> = ({
     }
   }, [messages, isSpeechDisabled]);
 
-  useEffect(() => {
-    if (isListening) {
-      setMessage(recognitionResult.interimText);
-    }
-  }, [recognitionResult.interimText]);
+  // TODO
+  // useEffect(() => {
+  //   if (isListening) {
+  //     setMessage(recognitionResult.interimText);
+  //   }
+  // }, [recognitionResult.interimText]);
 
   const onSubmit = async (data) => {
     try {
@@ -160,7 +163,13 @@ const ChatPage: React.FC<ChatPageProps> = ({
           { withCredentials: true },
         );
         gptMessage = callGpt.data.choices[0].message;
-        const createGptLog = await axios.post(
+        
+        console.log('messages', messages);
+        console.log('callGpt', callGpt);
+
+        console.log('!!!', callGpt.data.totalPrompts);
+
+        await axios.post(
           '/api/gpt-logs',
           {
             gptModel: callGpt.data.model,
@@ -168,6 +177,7 @@ const ChatPage: React.FC<ChatPageProps> = ({
             completionTokens: callGpt.data.usage.completion_tokens,
             totalTokens: callGpt.data.usage.total_tokens,
             prompt: inputText,
+            totalPrompts: JSON.stringify(callGpt.data.totalPrompts),
             response: gptMessage.content,
           },
           { withCredentials: true },

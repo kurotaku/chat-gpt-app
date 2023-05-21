@@ -169,6 +169,7 @@ model GptLog {
   promptTokens     Int      @map(name: "prompt_tokens")
   completionTokens Int      @map(name: "completion_tokens")
   totalTokens      Int      @map(name: "total_tokens")
+  totalPrompts     String   @map(name: "total_prompts") @db.Text
   prompt           String   @db.Text
   response         String   @db.Text
   createdAt        DateTime @default(now()) @map(name: "created_at")

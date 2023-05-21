@@ -68,14 +68,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     };
   });
 
+  const totalPrompts = [
+    ...globalPromptsArray, ...teamPromptsArray, ...subjectPromptsArray
+  ]
+
   try {
     const completion = await openai.createChatCompletion({
       // model: 'gpt-4',
       model: 'gpt-3.5-turbo',
-      messages: [...globalPromptsArray, ...teamPromptsArray, ...subjectPromptsArray, ...messagesArray],
+      messages: [...totalPrompts, ...messagesArray],
     });
 
-    res.status(200).json(completion.data);
+    res.status(200).json({...completion.data, "totalPrompts": {...totalPrompts.map(prompt => (prompt.content))}});
   } catch (error) {
     res.status(500).json(error);
   }
