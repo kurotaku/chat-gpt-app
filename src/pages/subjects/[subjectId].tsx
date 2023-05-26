@@ -1,14 +1,21 @@
+import { GetServerSideProps } from 'next';
+import { getCommonProps } from '../../utils/getCommonProps';
+import { PrismaClient, Subject, Chat } from '@prisma/client';
+import {
+  SerializableUser,
+  SerializableUserConfig,
+  SerializableTeam,
+  SerializableSubject,
+  SerializableChat,
+} from '../../types/types';
+import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import axios from 'axios';
-import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { formatDate } from '../../utils/formatDate';
-import fetchCurrentUser from '../../utils/fetchCurrentUser';
 import ChatPage from '../chat';
-import { PrismaClient, Subject, Chat } from '@prisma/client';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import Layout from '../../components/Layout';
@@ -26,12 +33,18 @@ const ChatItem = styled.div`
   margin-bottom: 2px;
 `;
 
-type SubjectPageProps = {
-  subject: Subject;
-  serverSideChats: Chat[];
+type Props = {
+  user: SerializableUser & { team: SerializableTeam; userConfig: SerializableUserConfig };
+  subject: SerializableSubject;
+  chats: SerializableChat[];
 };
 
-const SubjectPage = ({ subject: subjectProp, serverSideChats }: SubjectPageProps) => {
+const SubjectPage: React.FC<Props> = (props: Props) => {
+  const { t } = useTranslation('common');
+
+  // ユーザーの話題の表記設定があった場合、設定された文字列になる
+  const modelName: string = props.user.userConfig.subjectLabel || t('models.subject');
+
   type FormInput = {
     name: string;
   };
@@ -47,12 +60,10 @@ const SubjectPage = ({ subject: subjectProp, serverSideChats }: SubjectPageProps
     formState: { errors },
   } = useForm<FormInput>();
 
-  const { data: session } = useSession();
-  const [user, setUser] = useState(null);
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-  const [subject, setSubject] = useState<Subject>(subjectProp);
-  const [chats, setChats] = useState(serverSideChats);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
+  const [subject, setSubject] = useState<SerializableSubject>(props.subject);
+  const [chats, setChats] = useState(props.chats);
   const [selectedChatId, setSelectedChatId] = useState(null);
 
   const fetchChats = async () => {
@@ -114,22 +125,14 @@ const SubjectPage = ({ subject: subjectProp, serverSideChats }: SubjectPageProps
   };
 
   useEffect(() => {
-    const getUser = async () => {
-      const fetchedUser = await fetchCurrentUser(session);
-      setUser(fetchedUser);
-    };
-    getUser();
-    5;
-
     chats || fetchChats();
-  }, [session]);
+  }, []);
 
   return (
     <Layout title={`Subject: ${subject.name}`}>
       <Header>
         <h1>{subject.name}</h1>
         <div className='ml-auto mr-4'>
-          {/* <button onClick={() => editPrompt(subjectPrompt)}>編集</button> */}
           <button onClick={(e) => toggleEditModal(e)}>
             <i className='icon-pen events-none text-2xl mr-1' />
           </button>
@@ -141,7 +144,7 @@ const SubjectPage = ({ subject: subjectProp, serverSideChats }: SubjectPageProps
       </Header>
       <Breadcrumb>
         <span>
-          <Link href='/subjects'>話題</Link>
+          <Link href='/subjects'>{modelName}</Link>
         </span>
         <i className='icon-right_arrow' />
         <span>{subject.name}</span>
@@ -169,7 +172,7 @@ const SubjectPage = ({ subject: subjectProp, serverSideChats }: SubjectPageProps
         <Modal close={toggleModal} title={`${subject.name}に関するチャット`}>
           <div className='pb-4'>
             <ChatPage
-              currentUser={user}
+              currentUser={props.user}
               currentSubject={subject}
               chatId={selectedChatId}
               onChatUpdated={fetchChats}
@@ -202,8 +205,13 @@ const SubjectPage = ({ subject: subjectProp, serverSideChats }: SubjectPageProps
 export default SubjectPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const commonProps = await getCommonProps(context);
+  if (!commonProps) {
+    return { props: {} };
+  }
+
   const { subjectId } = context.params;
-  const subject = await prisma.subject.findUnique({
+  const subject: Subject = await prisma.subject.findUnique({
     where: {
       id: Number(subjectId),
     },
@@ -215,27 +223,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const serializedSubject = {
-    ...subject,
-    createdAt: subject.createdAt.toISOString(),
-    updatedAt: subject.updatedAt.toISOString(),
-  };
-
-  const fetchChats = await prisma.chat.findMany({
+  const chats: Chat[] = await prisma.chat.findMany({
     where: {
       subjectId: subject.id,
     },
   });
-  const serverSideChats = fetchChats.map((chat) => ({
-    ...chat,
-    createdAt: chat.createdAt.toISOString(),
-    updatedAt: chat.updatedAt.toISOString(),
-  }));
+
+  const props: Props = {
+    ...commonProps,
+    subject: {
+      ...subject,
+      createdAt: subject.createdAt.toISOString(),
+      updatedAt: subject.updatedAt.toISOString(),
+    },
+    chats: chats.map((chat) => ({
+      ...chat,
+      createdAt: chat.createdAt.toISOString(),
+      updatedAt: chat.updatedAt.toISOString(),
+    })),
+  };
 
   return {
-    props: {
-      subject: serializedSubject,
-      serverSideChats,
-    },
+    props: props,
   };
 };

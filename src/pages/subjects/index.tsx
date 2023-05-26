@@ -1,13 +1,18 @@
 import { GetServerSideProps } from 'next';
+import { getCommonProps } from '../../utils/getCommonProps';
+import { PrismaClient, Subject } from '@prisma/client';
+import {
+  SerializableUser,
+  SerializableUserConfig,
+  SerializableTeam,
+  SerializableSubject,
+} from '../../types/types';
 import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import Link from 'next/link';
-import { PrismaClient, Subject } from '@prisma/client';
 import { toast } from 'react-toastify';
 import Layout from '../../components/Layout';
 import { Header } from '../../components/header/Header';
@@ -18,12 +23,16 @@ import FloatingActionButton from '../../components/button/FloatingActionButton';
 
 const prisma = new PrismaClient();
 
-type SubjectsIndexProps = {
-  serverSideSubjects: Subject[];
+type Props = {
+  user: SerializableUser & { team: SerializableTeam; userConfig: SerializableUserConfig };
+  subjects: SerializableSubject[];
 };
 
-const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
+const SubjectsIndex = (props: Props) => {
   const { t } = useTranslation('common');
+
+  // ユーザーの話題の表記設定があった場合、設定された文字列になる
+  const modelName: string = props.user.userConfig.subjectLabel || t('models.subject');
 
   type FormInput = {
     name: string;
@@ -31,7 +40,7 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
 
   const router = useRouter();
   const { deleted } = router.query;
-  const [subjects, setSubjects] = useState(serverSideSubjects);
+  const [subjects, setSubjects] = useState(props.subjects);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const {
@@ -52,7 +61,7 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
   useEffect(() => {
     // URLパラメータ"deleted=true"が存在する場合、メッセージを表示
     if (deleted === 'true') {
-      toast.success('話題を削除しました');
+      toast.success(`${modelName}を削除しました`);
     }
   }, [deleted]);
 
@@ -70,9 +79,9 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
   };
 
   return (
-    <Layout title={t('models.subject')}>
+    <Layout title={modelName}>
       <Header>
-        <h1>{t('models.subject')}</h1>
+        <h1>{modelName}</h1>
       </Header>
       {subjects?.map((subject, index) => (
         <Link
@@ -91,7 +100,7 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
       {isOpenModal && (
         <Modal close={toggleModal}>
           <div className='px-8'>
-            <h2 className='font-bold'>{t('models.subject')}作成</h2>
+            <h2 className='font-bold'>{modelName}作成</h2>
             <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
               <div className='mb-4'>
                 <TextField
@@ -120,17 +129,23 @@ const SubjectsIndex = ({ serverSideSubjects }: SubjectsIndexProps) => {
 export default SubjectsIndex;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const response = await prisma.subject.findMany();
-  const serverSideSubjects = response.map((subject) => ({
-    ...subject,
-    createdAt: subject.createdAt.toISOString(),
-    updatedAt: subject.updatedAt.toISOString(),
-  }));
+  const commonProps = await getCommonProps(context);
+  if (!commonProps) {
+    return { props: {} };
+  }
+
+  const subjects: Subject[] = await prisma.subject.findMany();
+
+  const props: Props = {
+    ...commonProps,
+    subjects: subjects.map((subject) => ({
+      ...subject,
+      createdAt: subject.createdAt.toISOString(),
+      updatedAt: subject.updatedAt.toISOString(),
+    })),
+  };
 
   return {
-    props: {
-      serverSideSubjects,
-      ...(await serverSideTranslations(context.defaultLocale || 'ja', ['common'])),
-    },
+    props: props,
   };
 };

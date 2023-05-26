@@ -31,8 +31,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             name: req.body.name,
             team: {
               connect: {
-                id: user.teamId
-              }
+                id: user.teamId,
+              },
             },
             ...(req.body.subjectId && {
               subject: {

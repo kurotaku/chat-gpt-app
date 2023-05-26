@@ -24,7 +24,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(200).json(logs);
       break;
     case 'POST':
-      const { gptModel, promptTokens, completionTokens, totalTokens, prompt, response, totalPrompts } = req.body;
+      const {
+        gptModel,
+        promptTokens,
+        completionTokens,
+        totalTokens,
+        prompt,
+        response,
+        totalPrompts,
+      } = req.body;
       const log = await prisma.gptLog.create({
         data: {
           gptModel,

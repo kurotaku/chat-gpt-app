@@ -11,5 +11,11 @@
   },
   "myteam": "あなたのチーム",
   "profile": "プロフィール",
-  "prompt": "プロンプト"
+  "prompt": "プロンプト",
+  "config": "設定",
+  "new": "新規作成",
+  "create": "作成",
+  "edit": "編集",
+  "update": "更新",
+  "delete": "削除"
 }

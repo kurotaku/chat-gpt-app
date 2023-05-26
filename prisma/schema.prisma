@@ -43,13 +43,19 @@ model Session {
   @@map(name: "sessions")
 }
 
+enum Plan {
+  FREE
+  STANDARD
+}
+
 model Team {
   id             Int             @id @default(autoincrement())
   name           String
+  plan           Plan            @default(FREE)
   users          User[]
   createdAt      DateTime        @default(now()) @map(name: "created_at")
   updatedAt      DateTime        @default(now()) @updatedAt @map(name: "updated_at")
-  Chat           Chat[]
+  Chats          Chat[]
   TeamPrompts    TeamPrompt[]
   subjectPrompts SubjectPrompt[]
   userPrompts    UserPrompt[]
@@ -82,7 +88,8 @@ model User {
   accounts    Account[]
   sessions    Session[]
   userPrompts UserPrompt[]
-  GPTLogs     GptLog[]
+  gptLogs     GptLog[]
+  userConfig  UserConfig?
   createdAt   DateTime     @default(now()) @map(name: "created_at")
   updatedAt   DateTime     @default(now()) @updatedAt @map(name: "updated_at")
 
@@ -104,6 +111,19 @@ model UserPrompt {
   @@index([teamId], name: "teamId")
   @@index([userId], name: "userId")
   @@map(name: "user_prompts")
+}
+
+model UserConfig {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique @map(name: "user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamLabel    String   @map(name: "team_label")
+  subjectLabel String   @map(name: "subject_label")
+  createdAt    DateTime @default(now()) @map(name: "created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@index([userId], name: "userId")
+  @@map(name: "user_configs")
 }
 
 model Chat {

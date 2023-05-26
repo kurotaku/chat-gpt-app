@@ -34,7 +34,7 @@ const myteamUsers = (props: Props) => {
     name: string;
     content: string;
   };
-  
+
   const { t } = useTranslation('common');
 
   const [prompts, setPrompts] = useState(props.prompts);
@@ -151,7 +151,8 @@ const myteamUsers = (props: Props) => {
         <Modal close={toggleModal}>
           <div className='px-8'>
             <h2 className='font-bold'>
-              {t('models.teamPrompt')}{currentPrompt ? '編集' : '作成'}
+              {t('models.teamPrompt')}
+              {currentPrompt ? '編集' : '作成'}
             </h2>
             <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
               <div className='mb-4'>
@@ -184,7 +185,6 @@ const myteamUsers = (props: Props) => {
           </div>
         </Modal>
       )}
-
     </Layout>
   );
 };

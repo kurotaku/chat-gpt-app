@@ -39,7 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const teamPrompts = await prisma.teamPrompt.findMany({
-    where: {teamId: user.teamId}
+    where: { teamId: user.teamId },
   });
   const teamPromptsArray = teamPrompts.map((prompt) => {
     return {
@@ -49,7 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const userPrompts = await prisma.userPrompt.findMany({
-    where: {teamId: user.teamId}
+    where: { teamId: user.teamId },
   });
   const userPromptsArray = userPrompts.map((prompt) => {
     return {
@@ -79,17 +79,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const totalPrompts = [
-    ...globalPromptsArray, ...teamPromptsArray, ...userPromptsArray, ...subjectPromptsArray
-  ]
+    ...globalPromptsArray,
+    ...teamPromptsArray,
+    ...userPromptsArray,
+    ...subjectPromptsArray,
+  ];
 
   try {
     const completion = await openai.createChatCompletion({
-      // model: 'gpt-4',
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4',
+      // model: 'gpt-3.5-turbo',
       messages: [...totalPrompts, ...messagesArray],
     });
 
-    res.status(200).json({...completion.data, "totalPrompts": {...totalPrompts.map(prompt => (prompt.content))}});
+    res.status(200).json({
+      ...completion.data,
+      totalPrompts: { ...totalPrompts.map((prompt) => prompt.content) },
+    });
   } catch (error) {
     res.status(500).json(error);
   }

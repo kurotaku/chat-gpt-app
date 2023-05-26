@@ -56,7 +56,7 @@ const Profile = () => {
             </table>
           )}
         </div>
-      </div>      
+      </div>
     </Layout>
   );
 };

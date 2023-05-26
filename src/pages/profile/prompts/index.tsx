@@ -29,12 +29,12 @@ type Props = {
   prompts: PromptSubset[];
 };
 
-const myteamUsers = (props: Props) => {
+const userPrompts = (props: Props) => {
   type FormInput = {
     name: string;
     content: string;
   };
-  
+
   const { t } = useTranslation('common');
 
   const [prompts, setPrompts] = useState(props.prompts);
@@ -125,7 +125,7 @@ const myteamUsers = (props: Props) => {
 
       <div className='flex'>
         <ProfileNav />
-        <div className='p-8'>
+        <div className='w-full p-8'>
           {prompts?.map((prompt, index) => (
             <div key={index} className='bg-slate-200 p-8 mb-1'>
               <h2 className='mb-2 bold'>{prompt.name}</h2>
@@ -151,7 +151,8 @@ const myteamUsers = (props: Props) => {
         <Modal close={toggleModal}>
           <div className='px-8'>
             <h2 className='font-bold'>
-              {t('models.userPrompt')}{currentPrompt ? '編集' : '作成'}
+              {t('models.userPrompt')}
+              {currentPrompt ? '編集' : '作成'}
             </h2>
             <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
               <div className='mb-4'>
@@ -184,12 +185,11 @@ const myteamUsers = (props: Props) => {
           </div>
         </Modal>
       )}
-
     </Layout>
   );
 };
 
-export default myteamUsers;
+export default userPrompts;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const commonProps = await getCommonProps(context);

@@ -11,10 +11,7 @@ const ProfileNav = () => {
   return (
     <PageNav>
       <li>
-        <Link
-          className={`${router.pathname === '/profile' ? 'current' : ''}`}
-          href='/profile'
-        >
+        <Link className={`${router.pathname === '/profile' ? 'current' : ''}`} href='/profile'>
           {t('profile')}
         </Link>
       </li>
@@ -24,6 +21,14 @@ const ProfileNav = () => {
           href='/profile/prompts'
         >
           {t('prompt')}
+        </Link>
+      </li>
+      <li>
+        <Link
+          className={`${router.pathname === '/profile/config' ? 'current' : ''}`}
+          href='/profile/config'
+        >
+          {t('config')}
         </Link>
       </li>
     </PageNav>

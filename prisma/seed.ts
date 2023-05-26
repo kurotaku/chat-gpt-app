@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
+import { createUserWithConfig } from '../src/services/userService';
 
 const prisma = new PrismaClient();
 
@@ -9,15 +10,15 @@ async function main() {
   await prisma.globalPrompt.create({
     data: {
       content: `
-      語尾は「わん」でお願いします。
-      `
+      関西弁で返答してください。
+      `,
     },
   });
 
   console.log('=========== Creating Teams ===========');
   const testTeam = await prisma.team.create({
     data: {
-      name: '株式会社わんわん',
+      name: 'テストカンパニー',
     },
   });
 
@@ -29,27 +30,32 @@ async function main() {
           id: testTeam.id,
         },
       },
-      name: 'わんわんについて',
-      content: `株式会社わんわんでは、いわゆる犬の芸をすることによって報酬を得ています。
-おて、おかわり、おすわり、ふせなどです。
-また散歩は朝、夕、毎日2回行っていますが、それも報酬が発生します。`,
+      name: 'メルマガの冒頭文',
+      content: `私が、「日付」、「テーマ」、「星座」を指定して、「メルマガ」と言ったら、
+季節を考慮した挨拶と、テーマを絡めたお話と、指定した星座に関する占いとラッキーアイテムを使った300字程度の文章を考えて、
+最後は、「今日のダジャレです」と言って、ダジャレを言って終わってください。返答は不要で、考えた文章のみ返してください。`,
     },
   });
 
   console.log('=========== Creating Users ===========');
 
-  const testUser = await prisma.user.create({
-    data: {
-      team: {
-        connect: {
-          id: testTeam.id,
-        },
+  const testUserData = {
+    team: {
+      connect: {
+        id: testTeam.id,
       },
-      name: 'テストユーザー',
-      email: 'test@test.com',
-      password: bcrypt.hashSync('password', 10),
     },
-  });
+    name: 'テストユーザー',
+    email: 'test@test.com',
+    password: bcrypt.hashSync('password', 10),
+  };
+
+  const testUserConfigData = {
+    teamLabel: '企業',
+    subjectLabel: 'テーマ',
+  };
+
+  const { user: testUser } = await createUserWithConfig(testUserData, testUserConfigData);
 
   for (let i = 0; i < 10; i++) {
     faker.locale = 'ja';
@@ -86,12 +92,11 @@ async function main() {
       },
       user: {
         connect: {
-          id: testUser.id
-        }
+          id: testUser.id,
+        },
       },
-      name: '私が得意なこと',
-      content: `私はおてとおかわりが得意です。会社では通常散歩は2回ですが、私は3回行けます。
-また、会社の通常の芸の他に、ジャンプ、くるりんができます。`,
+      name: '占い',
+      content: `私が「ほいさっさ」と言ったら、今日の占いを返答してください。`,
     },
   });
 

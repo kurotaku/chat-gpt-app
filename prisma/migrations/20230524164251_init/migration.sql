@@ -38,6 +38,7 @@ CREATE TABLE `sessions` (
 CREATE TABLE `teams` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
+    `plan` ENUM('FREE', 'STANDARD') NOT NULL DEFAULT 'FREE',
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -83,6 +84,20 @@ CREATE TABLE `user_prompts` (
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     INDEX `teamId`(`team_id`),
+    INDEX `userId`(`user_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `user_configs` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `user_id` INTEGER NOT NULL,
+    `team_label` VARCHAR(191) NOT NULL,
+    `subject_label` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    UNIQUE INDEX `user_configs_user_id_key`(`user_id`),
     INDEX `userId`(`user_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -148,6 +163,7 @@ CREATE TABLE `gpt_logs` (
     `prompt_tokens` INTEGER NOT NULL,
     `completion_tokens` INTEGER NOT NULL,
     `total_tokens` INTEGER NOT NULL,
+    `total_prompts` TEXT NOT NULL,
     `prompt` TEXT NOT NULL,
     `response` TEXT NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -198,6 +214,9 @@ ALTER TABLE `user_prompts` ADD CONSTRAINT `user_prompts_team_id_fkey` FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE `user_prompts` ADD CONSTRAINT `user_prompts_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `user_configs` ADD CONSTRAINT `user_configs_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `chats` ADD CONSTRAINT `chats_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `teams`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

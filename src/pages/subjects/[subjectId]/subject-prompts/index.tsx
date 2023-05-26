@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { GetServerSideProps } from 'next';
+import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import Link from 'next/link';
 import { PrismaClient, Subject, SubjectPrompt } from '@prisma/client';
-import { SerializableUser, SerializableTeam, SerializableSubject, SerializableSubjectPrompts } from '../../../../types/types';
+import {
+  SerializableUser,
+  SerializableUserConfig,
+  SerializableTeam,
+  SerializableSubject,
+  SerializableSubjectPrompts,
+} from '../../../../types/types';
 import { getCommonProps } from '../../../../utils/getCommonProps';
 import { toast } from 'react-toastify';
 import Layout from '../../../../components/Layout';
@@ -18,7 +25,7 @@ import FloatingActionButton from '../../../../components/button/FloatingActionBu
 const prisma = new PrismaClient();
 
 type Props = {
-  user: SerializableUser & { team: SerializableTeam };
+  user: SerializableUser & { team: SerializableTeam; userConfig: SerializableUserConfig };
   subject: SerializableSubject;
   prompts: SerializableSubjectPrompts[];
 };
@@ -29,6 +36,7 @@ const SubjectPrompts = (props: Props) => {
     content: string;
   };
 
+  const { t } = useTranslation('common');
   const [prompts, setPrompts] = useState(props.prompts);
   const [currentPrompt, setCurrentPrompt] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -45,14 +53,13 @@ const SubjectPrompts = (props: Props) => {
   const content = watch('content', '');
 
   const fetchPrompts = async () => {
-    try{
+    try {
       const response = await axios.get(`/api/subject-prompts?subjectId=${props.subject.id}`);
       setPrompts([...response.data]);
     } catch (e) {
       toast.error('エラーが発生しました');
       console.log('ERROR', e);
     }
-    
   };
 
   const newPrompt = () => {
@@ -119,7 +126,7 @@ const SubjectPrompts = (props: Props) => {
       </Header>
       <Breadcrumb>
         <span>
-          <Link href='/subjects'>話題</Link>
+          <Link href='/subjects'>{props.user.userConfig.subjectLabel || t('models.subject')}</Link>
         </span>
         <i className='icon-right_arrow' />
         <span>

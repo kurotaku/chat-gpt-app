@@ -12,9 +12,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const user = await prisma.user.findUnique({
-    where: { email: session.user.email }
+    where: { email: session.user.email },
   });
-  
+
   try {
     switch (req.method) {
       case 'GET':

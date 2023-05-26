@@ -163,7 +163,7 @@ const ChatPage: React.FC<ChatPageProps> = ({
           { withCredentials: true },
         );
         gptMessage = callGpt.data.choices[0].message;
-        
+
         console.log('messages', messages);
         console.log('callGpt', callGpt);
 

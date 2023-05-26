@@ -1,11 +1,11 @@
-import {
-  User,
-  Team,
-  Subject,
-  SubjectPrompt
-} from '@prisma/client';
+import { User, UserConfig, Team, Subject, SubjectPrompt, Chat } from '@prisma/client';
 
 export type SerializableUser = Omit<User, 'createdAt' | 'updatedAt'> & {
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SerializableUserConfig = Omit<UserConfig, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
   updatedAt: string;
 };
@@ -21,6 +21,11 @@ export type SerializableSubject = Omit<Subject, 'createdAt' | 'updatedAt'> & {
 };
 
 export type SerializableSubjectPrompts = Omit<SubjectPrompt, 'createdAt' | 'updatedAt'> & {
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SerializableChat = Omit<Chat, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
   updatedAt: string;
 };
