@@ -2,7 +2,6 @@ import { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
-import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { SerializableUser, SerializableUserConfig, SerializableTeam } from '../../../types/types';
@@ -60,15 +59,19 @@ const userConfig = (props: Props) => {
       <div className='flex'>
         <ProfileNav />
         <div className='w-full p-8'>
-          <div className='mb-4'>
-            <TextField
-              onChange={(e) => setTeamLabel(e.target.value)}
-              value={teamLabel}
-              placeholder={t('models.team')}
-            />
-          </div>
+          {props.user.accountType == "COMPANY" && (
+            <div className='mb-4'>
+              <p className="mb-2">「{t('models.team')}」の表記</p>
+              <TextField
+                onChange={(e) => setTeamLabel(e.target.value)}
+                value={teamLabel}
+                placeholder={t('models.team')}
+              />
+            </div>
+          )}
 
           <div className='mb-4'>
+            <p className="mb-2">「{t('models.subject')}」の表記</p>
             <TextField
               onChange={(e) => setSubjectLabel(e.target.value)}
               value={subjectLabel}

@@ -44,10 +44,12 @@ const Profile = () => {
                   <th></th>
                   <td>{user.name}</td>
                 </tr>
-                <tr>
-                  <th></th>
-                  <td>{user.team.name}</td>
-                </tr>
+                {user.accountType == "COMPANY" && (
+                  <tr>
+                    <th></th>
+                    <td>{user.team.name}</td>
+                  </tr>
+                )}
                 <tr>
                   <th></th>
                   <td>{user.email}</td>

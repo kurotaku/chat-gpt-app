@@ -86,7 +86,6 @@ const Layout: React.FC<Props> = ({ children, title = 'GPT APP', accountType = 'P
               </Link>
             </li>
           )}
-          
           <li className='mb-4'>
             <Link href='/profile'>
               <Icon
@@ -105,7 +104,6 @@ const Layout: React.FC<Props> = ({ children, title = 'GPT APP', accountType = 'P
               </Link>
             </li>
           )}
-          
         </ul>
 
         <button

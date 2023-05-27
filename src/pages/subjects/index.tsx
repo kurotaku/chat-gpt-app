@@ -76,6 +76,7 @@ const SubjectsIndex = (props: Props) => {
     fetcSubjects();
     reset();
     setIsOpenModal(!isOpenModal);
+    toast.success(`${modelName}を作成しました`);
   };
 
   return (
@@ -103,19 +104,20 @@ const SubjectsIndex = (props: Props) => {
             <h2 className='font-bold'>{modelName}作成</h2>
             <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
               <div className='mb-4'>
+                <p className="mb-2">{modelName}名</p>
                 <TextField
                   {...register('name', {
                     required: '必須項目です',
                     validate: (value) => value.trim() !== '' || 'Name cannot be empty',
                   })}
-                  placeholder={t('subject.name')}
+                  placeholder={`${modelName}名`}
                 />
                 {errors.name && <p className='text-red-600'>{errors.name.message}</p>}
               </div>
 
               <p className='text-center'>
                 <AccentBtn type='submit' className='disabled:bg-gray-300' disabled={!name.trim()}>
-                  作成
+                  {t('create')}
                 </AccentBtn>
               </p>
             </form>
