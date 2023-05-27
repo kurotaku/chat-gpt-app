@@ -48,10 +48,10 @@ const Icon = styled.i`
 type Props = {
   children?: ReactNode;
   title?: string;
-  plan?: string;
+  accountType?: string;
 };
 
-const Layout: React.FC<Props> = ({ children, title = 'GPT APP', plan = 'FREE' }: Props) => {
+const Layout: React.FC<Props> = ({ children, title = 'GPT APP', accountType = 'PERSONAL' }: Props) => {
   const router = useRouter();
 
   return (
@@ -75,15 +75,18 @@ const Layout: React.FC<Props> = ({ children, title = 'GPT APP', plan = 'FREE' }:
               />
             </Link>
           </li>
-          <li className='mb-4'>
-            <Link href='/myteam/users'>
-              <Icon
-                className={`icon-people ${
-                  router.pathname.startsWith('/myteam/users') ? 'current' : ''
-                }`}
-              />
-            </Link>
-          </li>
+          {accountType == "COMPANY" &&(
+            <li className='mb-4'>
+              <Link href='/myteam/users'>
+                <Icon
+                  className={`icon-people ${
+                    router.pathname.startsWith('/myteam/users') ? 'current' : ''
+                  }`}
+                />
+              </Link>
+            </li>
+          )}
+          
           <li className='mb-4'>
             <Link href='/profile'>
               <Icon
@@ -91,15 +94,18 @@ const Layout: React.FC<Props> = ({ children, title = 'GPT APP', plan = 'FREE' }:
               />
             </Link>
           </li>
-          <li className='mb-4'>
-            <Link href='/setting/global-prompts'>
-              <Icon
-                className={`icon-setting ${
-                  router.pathname.startsWith('/setting') ? 'current' : ''
-                }`}
-              />
-            </Link>
-          </li>
+          {accountType == "ADMIN" &&(
+            <li className='mb-4'>
+              <Link href='/setting/global-prompts'>
+                <Icon
+                  className={`icon-setting ${
+                    router.pathname.startsWith('/setting') ? 'current' : ''
+                  }`}
+                />
+              </Link>
+            </li>
+          )}
+          
         </ul>
 
         <button

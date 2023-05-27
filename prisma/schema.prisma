@@ -78,8 +78,9 @@ model TeamPrompt {
 }
 
 enum AccountType {
-  PARSONAL
+  PERSONAL
   COMPANY
+  ADMIN
 }
 
 model User {
@@ -87,7 +88,7 @@ model User {
   name        String
   email       String       @unique
   password    String
-  accountType AccountType  @default(PARSONAL)
+  accountType AccountType  @default(PERSONAL)
   teamId      Int?         @map(name: "team_id")
   team        Team?        @relation(fields: [teamId], references: [id])
   chats       Chat[]
