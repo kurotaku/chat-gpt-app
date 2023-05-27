@@ -45,6 +45,7 @@ model Session {
 
 enum Plan {
   FREE
+  TRIAL
   STANDARD
 }
 
@@ -76,13 +77,19 @@ model TeamPrompt {
   @@map(name: "team_prompts")
 }
 
+enum AccountType {
+  PARSONAL
+  COMPANY
+}
+
 model User {
   id          Int          @id @default(autoincrement())
   name        String
   email       String       @unique
   password    String
-  teamId      Int          @map(name: "team_id")
-  team        Team         @relation(fields: [teamId], references: [id])
+  accountType AccountType  @default(PARSONAL)
+  teamId      Int?         @map(name: "team_id")
+  team        Team?        @relation(fields: [teamId], references: [id])
   chats       Chat[]
   messages    Message[]
   accounts    Account[]

@@ -48,9 +48,10 @@ const Icon = styled.i`
 type Props = {
   children?: ReactNode;
   title?: string;
+  plan?: string;
 };
 
-const Layout = ({ children, title = 'This is the default title' }: Props) => {
+const Layout: React.FC<Props> = ({ children, title = 'GPT APP', plan = 'FREE' }: Props) => {
   const router = useRouter();
 
   return (
