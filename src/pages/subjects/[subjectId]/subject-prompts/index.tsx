@@ -30,13 +30,16 @@ type Props = {
   prompts: SerializableSubjectPrompts[];
 };
 
-const SubjectPrompts = (props: Props) => {
+const SubjectPrompts: React.FC<Props> = (props: Props) => {
   type FormInput = {
     name: string;
     content: string;
   };
 
   const { t } = useTranslation('common');
+  // ユーザーの話題の表記設定があった場合、設定された文字列になる
+  const modelName: string = props.user.userConfig.subjectLabel || t('models.subject');
+
   const [prompts, setPrompts] = useState(props.prompts);
   const [currentPrompt, setCurrentPrompt] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -120,13 +123,13 @@ const SubjectPrompts = (props: Props) => {
   };
 
   return (
-    <Layout title={`Subject: ${props.subject.name}`}>
+    <Layout title={`${modelName}: ${props.subject.name}`}>
       <Header>
         <h1>{props.subject.name}に関するプロンプト一覧</h1>
       </Header>
       <Breadcrumb>
         <span>
-          <Link href='/subjects'>{props.user.userConfig.subjectLabel || t('models.subject')}</Link>
+          <Link href='/subjects'>{modelName}</Link>
         </span>
         <i className='icon-right_arrow' />
         <span>

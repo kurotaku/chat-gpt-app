@@ -129,7 +129,7 @@ const SubjectPage: React.FC<Props> = (props: Props) => {
   }, []);
 
   return (
-    <Layout title={`Subject: ${subject.name}`}>
+    <Layout title={`${modelName}: ${subject.name}`}>
       <Header>
         <h1>{subject.name}</h1>
         <div className='ml-auto mr-4'>
