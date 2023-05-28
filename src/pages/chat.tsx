@@ -96,7 +96,7 @@ const ChatPage: React.FC<ChatPageProps> = ({
     user || getUser();
 
     const fetchMessages = async () => {
-      const getMessages = await axios.get(`/api/private/messages/${chatId}`);
+      const getMessages = await axios.get(`/api/private/chats/${chatId}/messages/`);
       const newArray = getMessages.data.map((data) => {
         return {
           role: data.role,
@@ -110,7 +110,7 @@ const ChatPage: React.FC<ChatPageProps> = ({
     chatId && fetchMessages();
 
     const fetchApiUrls = async () => {
-      const getApiUrls = await axios.get('/api/apiurls');
+      const getApiUrls = await axios.get('/api/private/apiurls');
       setApiUrls(getApiUrls.data);
     };
     fetchApiUrls();
@@ -170,7 +170,7 @@ const ChatPage: React.FC<ChatPageProps> = ({
         console.log('!!!', callGpt.data.totalPrompts);
 
         await axios.post(
-          '/api/gpt-logs',
+          '/api/private/gpt-logs',
           {
             gptModel: callGpt.data.model,
             promptTokens: callGpt.data.usage.prompt_tokens,
@@ -195,18 +195,18 @@ const ChatPage: React.FC<ChatPageProps> = ({
           subjectId: subject?.id,
           name: inputText.slice(0, 100),
         };
-        const createChat = await axios.post('/api/chats', chatData, { withCredentials: true });
+        const createChat = await axios.post('/api/private/chats', chatData, { withCredentials: true });
         newChatId = createChat.data.id;
         setCurrentChatId(newChatId);
       }
 
       await axios.post(
-        `/api/private/messages/${currentChatId || newChatId}`,
+        `/api/private/chats/${currentChatId || newChatId}/messages/`,
         { role: 'user', content: inputText },
         { withCredentials: true },
       );
       await axios.post(
-        `/api/private/messages/${currentChatId || newChatId}`,
+        `/api/private/chats/${currentChatId || newChatId}/messages/`,
         { ...gptMessage },
         { withCredentials: true },
       );

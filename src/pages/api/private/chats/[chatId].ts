@@ -12,7 +12,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     return;
   }
 
-  const chatId = Number(req.query.chatId);
+  const chatId: number = Number(req.query.chatId);
 
   switch (req.method) {
     case 'GET':
