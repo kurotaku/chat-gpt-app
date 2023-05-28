@@ -61,7 +61,7 @@ const globalPrompts = () => {
 
   const updatePrompt = async (data) => {
     await axios.put(
-      `/api/global-prompts/${currentPrompt.id}`,
+      `/api/private/global-prompts/${currentPrompt.id}`,
       { ...data },
       { withCredentials: true },
     );
@@ -72,7 +72,7 @@ const globalPrompts = () => {
   const deletePrompt = async (promptId) => {
     try {
       if (window.confirm('本当に削除してよろしいですか？')) {
-        await axios.delete(`/api/global-prompts/${promptId}`, { withCredentials: true });
+        await axios.delete(`/api/private/global-prompts/${promptId}`, { withCredentials: true });
         toast.success('プロンプトを削除しました');
         fetchPrompts();
       }

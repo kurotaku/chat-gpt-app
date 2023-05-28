@@ -25,7 +25,7 @@ const userConfig = (props: Props) => {
     debounce(async (teamLabel, subjectLabel) => {
       try {
         await axios.put(
-          `/api/user-config/${props.user.userConfig?.id}`,
+          `/api/private/user-config/${props.user.userConfig?.id}`,
           { teamLabel, subjectLabel },
           { withCredentials: true },
         );
@@ -59,9 +59,9 @@ const userConfig = (props: Props) => {
       <div className='flex'>
         <ProfileNav />
         <div className='w-full p-8'>
-          {props.user.accountType == "COMPANY" && (
+          {props.user.accountType == 'COMPANY' && (
             <div className='mb-4'>
-              <p className="mb-2">「{t('models.team')}」の表記</p>
+              <p className='mb-2'>「{t('models.team')}」の表記</p>
               <TextField
                 onChange={(e) => setTeamLabel(e.target.value)}
                 value={teamLabel}
@@ -71,7 +71,7 @@ const userConfig = (props: Props) => {
           )}
 
           <div className='mb-4'>
-            <p className="mb-2">「{t('models.subject')}」の表記</p>
+            <p className='mb-2'>「{t('models.subject')}」の表記</p>
             <TextField
               onChange={(e) => setSubjectLabel(e.target.value)}
               value={subjectLabel}

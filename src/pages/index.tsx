@@ -41,7 +41,7 @@ const IndexPage = ({ serverSideChats }: IndexProps) => {
   const deleteChat = async (chatId) => {
     try {
       if (window.confirm('本当に削除してよろしいですか？')) {
-        await axios.delete(`/api/chats/${chatId}`, { withCredentials: true });
+        await axios.delete(`/api/private/chats/${chatId}`, { withCredentials: true });
         toast.success('チャットを削除しました');
         fetchChats();
       }

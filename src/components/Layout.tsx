@@ -51,7 +51,11 @@ type Props = {
   accountType?: string;
 };
 
-const Layout: React.FC<Props> = ({ children, title = 'GPT APP', accountType = 'PERSONAL' }: Props) => {
+const Layout: React.FC<Props> = ({
+  children,
+  title = 'GPT APP',
+  accountType = 'PERSONAL',
+}: Props) => {
   const router = useRouter();
 
   return (
@@ -75,7 +79,7 @@ const Layout: React.FC<Props> = ({ children, title = 'GPT APP', accountType = 'P
               />
             </Link>
           </li>
-          {accountType == "COMPANY" &&(
+          {accountType == 'COMPANY' && (
             <li className='mb-4'>
               <Link href='/myteam/users'>
                 <Icon
@@ -93,7 +97,7 @@ const Layout: React.FC<Props> = ({ children, title = 'GPT APP', accountType = 'P
               />
             </Link>
           </li>
-          {accountType == "ADMIN" &&(
+          {accountType == 'ADMIN' && (
             <li className='mb-4'>
               <Link href='/setting/global-prompts'>
                 <Icon

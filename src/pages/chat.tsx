@@ -96,7 +96,7 @@ const ChatPage: React.FC<ChatPageProps> = ({
     user || getUser();
 
     const fetchMessages = async () => {
-      const getMessages = await axios.get(`/api/messages/${chatId}`);
+      const getMessages = await axios.get(`/api/private/messages/${chatId}`);
       const newArray = getMessages.data.map((data) => {
         return {
           role: data.role,
@@ -152,7 +152,7 @@ const ChatPage: React.FC<ChatPageProps> = ({
       // 入力した文言がAPIURLのnameに該当していたら
       const apiUrlId: number = checkApiUrl(inputText);
       if (apiUrlId) {
-        const callApi = await axios.post(`/api/apiurls/exec/${apiUrlId.toString()}`, {
+        const callApi = await axios.post(`/api/private/apiurls/exec/${apiUrlId.toString()}`, {
           text: messages.slice(-1)[0].content,
         });
         gptMessage = { role: 'assistant', content: '実行します' };
@@ -201,12 +201,12 @@ const ChatPage: React.FC<ChatPageProps> = ({
       }
 
       await axios.post(
-        `/api/messages/${currentChatId || newChatId}`,
+        `/api/private/messages/${currentChatId || newChatId}`,
         { role: 'user', content: inputText },
         { withCredentials: true },
       );
       await axios.post(
-        `/api/messages/${currentChatId || newChatId}`,
+        `/api/private/messages/${currentChatId || newChatId}`,
         { ...gptMessage },
         { withCredentials: true },
       );

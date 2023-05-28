@@ -54,7 +54,7 @@ const SubjectsIndex = (props: Props) => {
   const name = watch('name', '');
 
   const fetcSubjects = async () => {
-    const response = await axios.get('/api/subjects');
+    const response = await axios.get('/api/private/subjects');
     setSubjects([...response.data]);
   };
 
@@ -72,7 +72,7 @@ const SubjectsIndex = (props: Props) => {
   };
 
   const onSubmit = async (data) => {
-    await axios.post('/api/subjects', data, { withCredentials: true });
+    await axios.post('/api/private/subjects', data, { withCredentials: true });
     fetcSubjects();
     reset();
     setIsOpenModal(!isOpenModal);
@@ -104,7 +104,7 @@ const SubjectsIndex = (props: Props) => {
             <h2 className='font-bold'>{modelName}作成</h2>
             <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
               <div className='mb-4'>
-                <p className="mb-2">{modelName}名</p>
+                <p className='mb-2'>{modelName}名</p>
                 <TextField
                   {...register('name', {
                     required: '必須項目です',

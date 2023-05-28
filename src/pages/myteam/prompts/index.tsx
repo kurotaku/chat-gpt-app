@@ -51,7 +51,7 @@ const myteamUsers = (props: Props) => {
   } = useForm<FormInput>();
 
   const fetchPrompts = async () => {
-    const response = await axios.get(`/api/team-prompts?teamId=${props.user.teamId}`);
+    const response = await axios.get(`/api/private/team-prompts?teamId=${props.user.teamId}`);
     setPrompts([...response.data]);
   };
 
@@ -80,7 +80,7 @@ const myteamUsers = (props: Props) => {
 
   const updatePrompt = async (data) => {
     await axios.put(
-      `/api/team-prompts/${currentPrompt.id}`,
+      `/api/private/team-prompts/${currentPrompt.id}`,
       { ...data, teamId: props.user.teamId },
       { withCredentials: true },
     );
@@ -90,7 +90,7 @@ const myteamUsers = (props: Props) => {
 
   const deletePrompt = async (subjectPromptId) => {
     if (window.confirm('本当に削除してよろしいですか？')) {
-      await axios.delete(`/api/team-prompts/${subjectPromptId}`, { withCredentials: true });
+      await axios.delete(`/api/private/team-prompts/${subjectPromptId}`, { withCredentials: true });
       toast.success('プロンプトを削除しました');
       fetchPrompts();
     }

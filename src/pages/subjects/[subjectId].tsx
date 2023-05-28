@@ -67,13 +67,13 @@ const SubjectPage: React.FC<Props> = (props: Props) => {
   const [selectedChatId, setSelectedChatId] = useState(null);
 
   const fetchChats = async () => {
-    const getChats = await axios.get(`/api/chats?subjectId=${subject.id}`);
+    const getChats = await axios.get(`/api/private/chats?subjectId=${subject.id}`);
     setChats([...getChats.data]);
   };
 
   const updateSubject = async (data) => {
     try {
-      const response = await axios.put(`/api/subjects/${subject.id}`, data, {
+      const response = await axios.put(`/api/private/subjects/${subject.id}`, data, {
         withCredentials: true,
       });
       setIsOpenEditModal(!isOpenEditModal);
@@ -88,7 +88,7 @@ const SubjectPage: React.FC<Props> = (props: Props) => {
   const deleteSubject = async (subjectId) => {
     try {
       if (window.confirm('本当に削除してよろしいですか？')) {
-        await axios.delete(`/api/subjects/${subjectId}`, { withCredentials: true });
+        await axios.delete(`/api/private/subjects/${subjectId}`, { withCredentials: true });
         router.push('/subjects?deleted=true');
       }
     } catch (error) {
@@ -100,7 +100,7 @@ const SubjectPage: React.FC<Props> = (props: Props) => {
   const deleteChat = async (chatId) => {
     try {
       if (window.confirm('本当に削除してよろしいですか？')) {
-        await axios.delete(`/api/chats/${chatId}`, { withCredentials: true });
+        await axios.delete(`/api/private/chats/${chatId}`, { withCredentials: true });
         toast.success('チャットを削除しました');
         fetchChats();
       }

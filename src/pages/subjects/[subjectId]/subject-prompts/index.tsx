@@ -57,7 +57,9 @@ const SubjectPrompts: React.FC<Props> = (props: Props) => {
 
   const fetchPrompts = async () => {
     try {
-      const response = await axios.get(`/api/subject-prompts?subjectId=${props.subject.id}`);
+      const response = await axios.get(
+        `/api/private/subject-prompts?subjectId=${props.subject.id}`,
+      );
       setPrompts([...response.data]);
     } catch (e) {
       toast.error('エラーが発生しました');
@@ -90,7 +92,7 @@ const SubjectPrompts: React.FC<Props> = (props: Props) => {
 
   const updatePrompt = async (data) => {
     await axios.put(
-      `/api/subject-prompts/${currentPrompt.id}`,
+      `/api/private/subject-prompts/${currentPrompt.id}`,
       { ...data, subjectId: props.subject.id },
       { withCredentials: true },
     );
@@ -100,7 +102,9 @@ const SubjectPrompts: React.FC<Props> = (props: Props) => {
 
   const deletePrompt = async (subjectPromptId) => {
     if (window.confirm('本当に削除してよろしいですか？')) {
-      await axios.delete(`/api/subject-prompts/${subjectPromptId}`, { withCredentials: true });
+      await axios.delete(`/api/private/subject-prompts/${subjectPromptId}`, {
+        withCredentials: true,
+      });
       toast.success('プロンプトを削除しました');
       fetchPrompts();
     }

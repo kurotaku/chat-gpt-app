@@ -61,7 +61,7 @@ const apiUrls = () => {
   };
 
   const updateApiUrl = async (data) => {
-    await axios.put(`/api/apiurls/${currentApiUrl.id}`, data, { withCredentials: true });
+    await axios.put(`/api/private/apiurls/${currentApiUrl.id}`, data, { withCredentials: true });
     toast.success('API URLを更新しました');
     fetchapiUrls();
     reset();
@@ -70,7 +70,7 @@ const apiUrls = () => {
 
   const deleteApiUrl = async (apiUrlId) => {
     if (window.confirm('本当に削除してよろしいですか？')) {
-      await axios.delete(`/api/apiurls/${apiUrlId}`, { withCredentials: true });
+      await axios.delete(`/api/private/apiurls/${apiUrlId}`, { withCredentials: true });
       toast.success('API URLを削除しました');
       fetchapiUrls();
     }

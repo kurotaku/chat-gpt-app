@@ -1,5 +1,7 @@
 import { User, UserConfig, Team, Subject, SubjectPrompt, Chat } from '@prisma/client';
 
+export type UserForToken = Pick<User, 'id' | 'email'>;
+
 export type SerializableUser = Omit<User, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
   updatedAt: string;
