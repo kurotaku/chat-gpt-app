@@ -9,8 +9,6 @@ const prisma = new PrismaClient();
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log('req.body', req.body);
-  console.log('req.headers', req.headers);
 
   switch (req.method) {
     case 'POST':
@@ -20,21 +18,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           throw new Error('No token provided');
         }
 
-        console.log(authHeader.split(' ')[1]);
         const token = authHeader.split(' ')[1]; // Bearer <token>
         const userFromToken: UserForToken = jwt.verify(token, ACCESS_TOKEN_SECRET);
-
-        console.log(userFromToken);
 
         const user: User = await prisma.user.findUnique({
           where: { email: userFromToken.email },
         });
 
-        console.log(user);
-
         const totalPrompts = await getPrompts(user, req);
-
-        console.log(req.body.messages);
 
         const messagesArray = req.body.messages.map((data) => {
           return {
