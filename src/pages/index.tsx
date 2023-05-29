@@ -34,7 +34,7 @@ const IndexPage = ({ serverSideChats }: IndexProps) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const fetchChats = async () => {
-    const responce = await axios.get('/api/chats');
+    const responce = await axios.get('/api/private/chats');
     setChats([...responce.data]);
   };
 

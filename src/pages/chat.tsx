@@ -158,16 +158,11 @@ const ChatPage: React.FC<ChatPageProps> = ({
         gptMessage = { role: 'assistant', content: '実行します' };
       } else {
         const callGpt = await axios.post(
-          '/api/chatgpt',
+          '/api/private/chatgpt',
           { subjectId: subject?.id, messages: [...messages, { role: 'user', content: inputText }] },
           { withCredentials: true },
         );
         gptMessage = callGpt.data.choices[0].message;
-
-        console.log('messages', messages);
-        console.log('callGpt', callGpt);
-
-        console.log('!!!', callGpt.data.totalPrompts);
 
         await axios.post(
           '/api/private/gpt-logs',
