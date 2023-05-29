@@ -111,7 +111,13 @@ export default IndexPage;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
   if (!session) {
-    return { props: {} };
+    return {
+      props: {},
+      redirect: {
+        destination: '/auth/signin',
+        permanent: false,
+      }
+    };
   }
 
   const response = await prisma.chat.findMany({
