@@ -37,7 +37,7 @@ const globalPrompts = () => {
   const content = watch('content', '');
 
   const fetchPrompts = async () => {
-    const response = await axios.get('/api/global-prompts');
+    const response = await axios.get('/api/private/global-prompts');
     setPrompts([...response.data]);
   };
 
@@ -47,7 +47,7 @@ const globalPrompts = () => {
   };
 
   const createPrompt = async (data) => {
-    await axios.post('/api/global-prompts', { ...data }, { withCredentials: true });
+    await axios.post('/api/private/global-prompts', { ...data }, { withCredentials: true });
     toast.success('プロンプトを作成しました');
     fetchPrompts();
     // reset();

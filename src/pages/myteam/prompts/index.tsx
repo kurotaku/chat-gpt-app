@@ -63,7 +63,7 @@ const myteamUsers = (props: Props) => {
 
   const createPrompt = async (data) => {
     await axios.post(
-      '/api/team-prompts',
+      '/api/private/team-prompts',
       { ...data, teamId: props.user.teamId },
       { withCredentials: true },
     );

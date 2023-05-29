@@ -20,7 +20,7 @@ const apiUrls = () => {
   const { register, handleSubmit, setValue, reset } = useForm();
 
   const fetchapiUrls = async () => {
-    const responce = await axios.get('/api/apiurls');
+    const responce = await axios.get('/api/private/apiurls');
     setApiUrls([...responce.data]);
   };
 
@@ -43,7 +43,7 @@ const apiUrls = () => {
   };
 
   const createApiUrl = async (data) => {
-    await axios.post('/api/apiurls', data, { withCredentials: true });
+    await axios.post('/api/private/apiurls', data, { withCredentials: true });
     toast.success('API URLを作成しました');
     fetchapiUrls();
     reset();
