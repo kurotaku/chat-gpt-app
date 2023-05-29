@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const chatId: number = Number(req.query.chatId);
-  
+
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
   });

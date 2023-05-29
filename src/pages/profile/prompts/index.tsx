@@ -15,6 +15,7 @@ import { TextField } from '../../../components/form/Input';
 import { AccentBtn } from '../../../components/button/Button';
 import Modal from '../../../components/modal/Modal';
 import FloatingActionButton from '../../../components/button/FloatingActionButton';
+import Link from 'next/link';
 
 const prisma = new PrismaClient();
 
@@ -118,7 +119,9 @@ const userPrompts = (props: Props) => {
         <h1>{t('profile')}</h1>
       </Header>
       <Breadcrumb>
-        <span>{t('profile')}</span>
+        <span>
+          <Link href='/profile'>{t('profile')}</Link>
+        </span>
         <i className='icon-right_arrow' />
         <span>{t('prompt')}</span>
       </Breadcrumb>

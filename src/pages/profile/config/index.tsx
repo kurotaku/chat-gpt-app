@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 import axios from 'axios';
+import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { SerializableUser, SerializableUserConfig, SerializableTeam } from '../../../types/types';
 import { getCommonProps } from '../../../utils/getCommonProps';
@@ -51,9 +52,11 @@ const userConfig = (props: Props) => {
         <h1>{t('profile')}</h1>
       </Header>
       <Breadcrumb>
-        <span>{t('profile')}</span>
+        <span>
+          <Link href='/profile'>{t('profile')}</Link>
+        </span>
         <i className='icon-right_arrow' />
-        <span>{t('prompt')}</span>
+        <span>{t('config')}</span>
       </Breadcrumb>
 
       <div className='flex'>

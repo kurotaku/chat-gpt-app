@@ -190,7 +190,9 @@ const ChatPage: React.FC<ChatPageProps> = ({
           subjectId: subject?.id,
           name: inputText.slice(0, 100),
         };
-        const createChat = await axios.post('/api/private/chats', chatData, { withCredentials: true });
+        const createChat = await axios.post('/api/private/chats', chatData, {
+          withCredentials: true,
+        });
         newChatId = createChat.data.id;
         setCurrentChatId(newChatId);
       }

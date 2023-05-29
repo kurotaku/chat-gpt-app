@@ -15,7 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const user: User & {team: Team} = await prisma.user.findUnique({
+  const user: User & { team: Team } = await prisma.user.findUnique({
     where: { email: session.user.email },
     include: { team: true },
   });

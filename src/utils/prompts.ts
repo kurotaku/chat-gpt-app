@@ -45,10 +45,5 @@ export async function getPrompts(user: User, req: NextApiRequest) {
     });
   }
 
-  return [
-    ...globalPromptsArray,
-    ...teamPromptsArray,
-    ...userPromptsArray,
-    ...subjectPromptsArray,
-  ];
+  return [...globalPromptsArray, ...teamPromptsArray, ...userPromptsArray, ...subjectPromptsArray];
 }

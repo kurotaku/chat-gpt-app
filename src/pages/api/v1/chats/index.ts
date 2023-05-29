@@ -9,7 +9,6 @@ const prisma = new PrismaClient();
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-
   switch (req.method) {
     case 'POST':
       try {
