@@ -16,3 +16,10 @@ mysqladmin -u root shutdown
 ```
 yarn run dev
 ```
+
+
+
+## generete token
+```
+openssl rand -hex 64
+```
