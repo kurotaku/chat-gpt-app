@@ -75,7 +75,7 @@ const SubjectPrompts: React.FC<Props> = (props: Props) => {
 
   const createPrompt = async (data) => {
     await axios.post(
-      '/api/subject-prompts',
+      '/api/private/subject-prompts',
       { ...data, subjectId: props.subject.id, teamId: props.user.teamId },
       { withCredentials: true },
     );
