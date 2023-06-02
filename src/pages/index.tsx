@@ -69,7 +69,7 @@ const IndexPage = ({ serverSideChats }: IndexProps) => {
   }, [session]);
 
   return (
-    <Layout title={t('home')}>
+    <Layout title={t('home')} accountType={user?.accountType}>
       <Header>
         <h1>{t('home')}</h1>
       </Header>
