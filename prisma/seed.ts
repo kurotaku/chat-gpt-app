@@ -7,13 +7,13 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('=========== Creating GlobalPrompts ===========');
-  await prisma.globalPrompt.create({
-    data: {
-      content: `
-      関西弁で返答してください。
-      `,
-    },
-  });
+  // await prisma.globalPrompt.create({
+  //   data: {
+  //     content: `
+  //     関西弁で返答してください。
+  //     `,
+  //   },
+  // });
 
   console.log('=========== Creating Teams ===========');
   const testTeam = await prisma.team.create({
@@ -23,19 +23,19 @@ async function main() {
   });
 
   console.log('=========== TeramPrompt ===========');
-  await prisma.teamPrompt.create({
-    data: {
-      team: {
-        connect: {
-          id: testTeam.id,
-        },
-      },
-      name: 'メルマガの冒頭文',
-      content: `私が、「日付」、「テーマ」、「星座」を指定して、「メルマガ」と言ったら、
-季節を考慮した挨拶と、テーマを絡めたお話と、指定した星座に関する占いとラッキーアイテムを使った300字程度の文章を考えて、
-最後は、「今日のダジャレです」と言って、ダジャレを言って終わってください。返答は不要で、考えた文章のみ返してください。`,
-    },
-  });
+//   await prisma.teamPrompt.create({
+//     data: {
+//       team: {
+//         connect: {
+//           id: testTeam.id,
+//         },
+//       },
+//       name: 'メルマガの冒頭文',
+//       content: `私が、「日付」、「テーマ」、「星座」を指定して、「メルマガ」と言ったら、
+// 季節を考慮した挨拶と、テーマを絡めたお話と、指定した星座に関する占いとラッキーアイテムを使った300字程度の文章を考えて、
+// 最後は、「今日のダジャレです」と言って、ダジャレを言って終わってください。返答は不要で、考えた文章のみ返してください。`,
+//     },
+//   });
 
   console.log('=========== Creating Users ===========');
 
@@ -57,7 +57,7 @@ async function main() {
 
   const { user: testUser } = await createUserWithConfig(testUserData, testUserConfigData);
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 30; i++) {
     faker.locale = 'ja';
     const familyName = faker.name.lastName();
     const firstName = faker.name.firstName();
@@ -65,40 +65,45 @@ async function main() {
 
     faker.locale = 'en';
     const engName = faker.name.fullName().toLowerCase();
-    const email = faker.internet.email(engName);
+    const email = `test${i}@test.com`;
     const password = bcrypt.hashSync('password', 10);
 
-    await prisma.user.create({
-      data: {
-        team: {
-          connect: {
-            id: testTeam.id,
-          },
-        },
-        name: name,
-        email: email,
-        password: password,
-      },
-    });
-  }
-
-  console.log('=========== UserPrompt ===========');
-  await prisma.userPrompt.create({
-    data: {
+    const userData = {
       team: {
         connect: {
           id: testTeam.id,
         },
       },
-      user: {
-        connect: {
-          id: testUser.id,
-        },
-      },
-      name: '占い',
-      content: `私が「ほいさっさ」と言ったら、今日の占いを返答してください。`,
-    },
-  });
+      name: name,
+      email: email,
+      password: password,
+    }
+
+    const userConfigData = {
+      teamLabel: '企業',
+      subjectLabel: 'テーマ',
+    };
+
+    await createUserWithConfig(userData, userConfigData);
+  }
+
+  console.log('=========== UserPrompt ===========');
+  // await prisma.userPrompt.create({
+  //   data: {
+  //     team: {
+  //       connect: {
+  //         id: testTeam.id,
+  //       },
+  //     },
+  //     user: {
+  //       connect: {
+  //         id: testUser.id,
+  //       },
+  //     },
+  //     name: '占い',
+  //     content: `私が「ほいさっさ」と言ったら、今日の占いを返答してください。`,
+  //   },
+  // });
 
   console.log('=========== API URLs ===========');
   await prisma.apiUrl.create({
