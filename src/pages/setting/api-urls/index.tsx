@@ -1,3 +1,7 @@
+import { GetServerSideProps } from 'next';
+import { withAuth } from '../../../utils/withAuth';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -181,3 +185,11 @@ const apiUrls = () => {
 };
 
 export default apiUrls;
+
+export const getServerSideProps: GetServerSideProps = withAuth(async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.defaultLocale || 'ja', ['common'])),
+    },
+  };
+});

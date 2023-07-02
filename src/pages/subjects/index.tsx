@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { withAuth } from '../../utils/withAuth';
 import { getCommonProps } from '../../utils/getCommonProps';
 import { PrismaClient, Subject } from '@prisma/client';
 import {
@@ -130,7 +131,7 @@ const SubjectsIndex = (props: Props) => {
 
 export default SubjectsIndex;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = withAuth(async (context) => {
   const commonProps = await getCommonProps(context);
   if (!commonProps) {
     return { props: {} };
@@ -150,4 +151,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: props,
   };
-};
+});

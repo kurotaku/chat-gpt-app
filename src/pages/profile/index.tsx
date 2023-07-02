@@ -1,8 +1,9 @@
 import { GetServerSideProps } from 'next';
+import { withAuth } from '../../utils/withAuth';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, getSession } from 'next-auth/react';
 import fetchCurrentUser from '../../utils/fetchCurrentUser';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
@@ -65,10 +66,10 @@ const Profile = () => {
 
 export default Profile;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = withAuth(async (context) => {
   return {
     props: {
       ...(await serverSideTranslations(context.defaultLocale || 'ja', ['common'])),
     },
   };
-};
+});

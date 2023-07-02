@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { withAuth } from '../../../utils/withAuth';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState, useEffect } from 'react';
@@ -172,10 +173,10 @@ const globalPrompts = () => {
 
 export default globalPrompts;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = withAuth(async (context) => {
   return {
     props: {
       ...(await serverSideTranslations(context.defaultLocale || 'ja', ['common'])),
     },
   };
-};
+});

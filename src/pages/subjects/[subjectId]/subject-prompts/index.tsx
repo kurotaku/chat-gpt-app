@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 import { GetServerSideProps } from 'next';
+import { withAuth } from '../../../../utils/withAuth';
 import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
@@ -201,8 +201,9 @@ const SubjectPrompts: React.FC<Props> = (props: Props) => {
     </Layout>
   );
 };
+export default SubjectPrompts;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = withAuth(async (context) => {
   const commonProps = await getCommonProps(context);
   if (!commonProps) {
     return { props: {} };
@@ -244,6 +245,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props,
   };
-};
-
-export default SubjectPrompts;
+});

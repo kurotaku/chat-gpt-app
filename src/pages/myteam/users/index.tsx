@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { withAuth } from '../../../utils/withAuth';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getSession } from 'next-auth/react';
@@ -57,7 +58,7 @@ const myteamUsers = (props: Props) => {
 
 export default myteamUsers;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = withAuth(async (context) => {
   const session = await getSession(context);
   if (!session) {
     return { props: {} };
@@ -96,4 +97,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: props,
   };
-};
+});

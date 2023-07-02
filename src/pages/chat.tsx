@@ -7,7 +7,6 @@ import { AccentBtn } from '../components/button/Button';
 import { TextArea } from '../components/form/Input';
 import Roading from '../components/form/Roading';
 import fetchCurrentUser from '../utils/fetchCurrentUser';
-import useSpeechRecognition from '../hooks/useSpeechRecognition';
 
 function autosize(textarea) {
   textarea.style.height = 'auto';
@@ -43,17 +42,8 @@ const ChatPage: React.FC<ChatPageProps> = ({
   const [isLoading, setLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm();
   const [isSpeechDisabled, setIsSpeechDisabled] = useState(true);
-  const [isListening, setIsListening] = useState(false);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-
-  // TODO
-  // const [recognitionResult, start, stop] = useSpeechRecognition({
-  //   enabled: true,
-  //   lang: 'ja',
-  //   continuous: true,
-  //   interimResults: true,
-  // });
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
@@ -65,28 +55,6 @@ const ChatPage: React.FC<ChatPageProps> = ({
     const apiUrl = apiUrls.find((apiUrl) => apiUrl.name === name);
     return apiUrl ? apiUrl.id : null;
   };
-
-  // TODO
-  // const handleToggleSpeech = () => {
-  //   setIsSpeechDisabled(!isSpeechDisabled);
-  // };
-
-  // const handleStopSpeech = () => {
-  //   speechSynthesis.cancel();
-  // };
-
-  // const toggleListening = () => {
-  //   if (isListening) {
-  //     stop();
-  //     setMessage(recognitionResult.finishText);
-  //     console.log('Interim text:', recognitionResult.interimText);
-  //     console.log('Final text:', recognitionResult.finishText);
-  //   } else {
-  //     start();
-  //   }
-
-  //   setIsListening(!isListening);
-  // };
 
   useEffect(() => {
     const getUser = async () => {

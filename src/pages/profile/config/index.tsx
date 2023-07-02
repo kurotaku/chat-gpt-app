@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { withAuth } from '../../../utils/withAuth';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
@@ -89,7 +90,7 @@ const userConfig = (props: Props) => {
 
 export default userConfig;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = withAuth(async (context) => {
   const commonProps = await getCommonProps(context);
   if (!commonProps) {
     return { props: {} };
@@ -102,4 +103,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: props,
   };
-};
+});

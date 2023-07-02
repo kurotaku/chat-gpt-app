@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { withAuth } from '../utils/withAuth';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState, useEffect } from 'react';
@@ -108,11 +109,10 @@ const IndexPage = ({ serverSideChats }: IndexProps) => {
 };
 export default IndexPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = withAuth(async (context) => {
   const session = await getSession(context);
   if (!session) {
     return {
-      props: {},
       redirect: {
         destination: '/auth/signin',
         permanent: false,
@@ -137,4 +137,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       serverSideChats,
     },
   };
-};
+});

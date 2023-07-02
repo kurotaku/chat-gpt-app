@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { getCsrfToken, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { CtxOrReq } from 'next-auth/client/_utils';
+import Head from 'next/head';
 import { useForm } from 'react-hook-form';
 import ErrorMessage from '../../components/form/ErrorMessage';
 import { AccentBtn } from '../../components/button/Button';
@@ -45,7 +46,13 @@ const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
   };
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    <>
+      <Head>
+        <title>ログイン</title>
+        <meta charSet='utf-8' />
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      </Head>
+      <div style={{ textAlign: 'center' }}>
       <form onSubmit={handleSubmit(signInUser)}>
         <input name='csrfToken' type='hidden' defaultValue={csrfToken} />
         <div style={{ marginTop: '15px' }}>
@@ -71,6 +78,7 @@ const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
         </div>
       </form>
     </div>
+    </>
   );
 };
 
