@@ -20,21 +20,8 @@ const Btn = styled.button`
     cursor: not-allowed;
   }
 `;
-export const AccentBtn = styled(Btn)`
-  background-color: ${Color.ACCENT};
-  &:hover {
-    background-color: ${({ disabled }) => !disabled && Color.ACCENT_HOVER};
-  }
-`;
 
-export const AccentLinkBtn = styled(Btn.withComponent(Link))`
-  background-color: ${Color.ACCENT};
-  &:hover {
-    background-color: ${Color.ACCENT_HOVER};
-  }
-`;
-
-export const BorderdBtn = styled.button`
+const BtnSmall = styled.button`
   display: inline-block;
   text-align: center;
   text-decoration: none;
@@ -45,11 +32,35 @@ export const BorderdBtn = styled.button`
   border-width: 1px;
   border-style: solid;
   cursor: pointer;
-  color: #777;
-  border-color: #ccc;
   font-size: 14px;
   &:disabled {
     cursor: not-allowed;
   }
 `;
-export const BorderdLinkBtn = styled(BorderdBtn.withComponent(Link))``;
+export const AccentBtn = styled(Btn)`
+  background-color: ${Color.ACCENT};
+  &:hover {
+    background-color: ${({ disabled }) => !disabled && Color.ACCENT_HOVER};
+  }
+`;
+
+export const BorderdBtn = styled(Btn)`
+  color: #777;
+  border-color: #ccc;
+`;
+
+export const AccentLinkBtn = styled(Btn.withComponent(Link))`
+  background-color: ${Color.ACCENT};
+  &:hover {
+    background-color: ${Color.ACCENT_HOVER};
+  }
+`;
+
+export const BorderdBtnSmall = styled(BtnSmall)`
+  color: #777;
+  border-color: #ccc;
+`;
+export const BorderdLinkBtnSmall = styled(BtnSmall.withComponent(Link))`
+  color: #777;
+  border-color: #ccc;
+`;

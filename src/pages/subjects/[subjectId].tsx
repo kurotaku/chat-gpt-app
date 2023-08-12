@@ -21,7 +21,7 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import Layout from '../../components/Layout';
 import Modal from '../../components/modal/Modal';
-import { BorderdLinkBtn } from '../../components/button/Button';
+import { BorderdLinkBtnSmall } from '../../components/button/Button';
 import { TextField } from '../../components/form/Input';
 import { AccentBtn } from '../../components/button/Button';
 import { Header, Breadcrumb } from '../../components/header/Header';
@@ -141,7 +141,9 @@ const SubjectPage: React.FC<Props> = (props: Props) => {
             <i className='icon-trash text-2xl' />
           </button>
         </div>
-        <BorderdLinkBtn href={`/subjects/${subject.id}/subject-prompts`}>プロンプト</BorderdLinkBtn>
+        <BorderdLinkBtnSmall href={`/subjects/${subject.id}/subject-prompts`}>
+          プロンプト
+        </BorderdLinkBtnSmall>
       </Header>
       <Breadcrumb>
         <span>

@@ -232,3 +232,28 @@ model SubjectPrompt {
   @@index([subjectId], name: "subjectId")
   @@map(name: "subject_prompts")
 }
+
+model Task {
+  id         Int       @id @default(autoincrement())
+  name       String
+  defaultUrl String
+  defaultContent    String
+  taskLogs   TaskLog[]
+  createdAt  DateTime  @default(now()) @map(name: "created_at")
+  updatedAt  DateTime  @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "tasks")
+}
+
+model TaskLog {
+  id         Int      @id @default(autoincrement())
+  taskId     Int      @map(name: "task_id")
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  name       String
+  defaultUrl String
+  content    String
+  createdAt  DateTime @default(now()) @map(name: "created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  @@map(name: "task_logs")
+}

@@ -1,4 +1,4 @@
-import { User, UserConfig, Team, Subject, SubjectPrompt, Chat } from '@prisma/client';
+import { User, UserConfig, Team, Subject, SubjectPrompt, Chat, Task } from '@prisma/client';
 
 export type UserForToken = Pick<User, 'id' | 'email'>;
 
@@ -28,6 +28,11 @@ export type SerializableSubjectPrompts = Omit<SubjectPrompt, 'createdAt' | 'upda
 };
 
 export type SerializableChat = Omit<Chat, 'createdAt' | 'updatedAt'> & {
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SerializableTask = Omit<Task, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
   updatedAt: string;
 };

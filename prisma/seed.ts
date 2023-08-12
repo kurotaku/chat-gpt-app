@@ -23,19 +23,19 @@ async function main() {
   });
 
   console.log('=========== TeramPrompt ===========');
-//   await prisma.teamPrompt.create({
-//     data: {
-//       team: {
-//         connect: {
-//           id: testTeam.id,
-//         },
-//       },
-//       name: 'メルマガの冒頭文',
-//       content: `私が、「日付」、「テーマ」、「星座」を指定して、「メルマガ」と言ったら、
-// 季節を考慮した挨拶と、テーマを絡めたお話と、指定した星座に関する占いとラッキーアイテムを使った300字程度の文章を考えて、
-// 最後は、「今日のダジャレです」と言って、ダジャレを言って終わってください。返答は不要で、考えた文章のみ返してください。`,
-//     },
-//   });
+  //   await prisma.teamPrompt.create({
+  //     data: {
+  //       team: {
+  //         connect: {
+  //           id: testTeam.id,
+  //         },
+  //       },
+  //       name: 'メルマガの冒頭文',
+  //       content: `私が、「日付」、「テーマ」、「星座」を指定して、「メルマガ」と言ったら、
+  // 季節を考慮した挨拶と、テーマを絡めたお話と、指定した星座に関する占いとラッキーアイテムを使った300字程度の文章を考えて、
+  // 最後は、「今日のダジャレです」と言って、ダジャレを言って終わってください。返答は不要で、考えた文章のみ返してください。`,
+  //     },
+  //   });
 
   console.log('=========== Creating Users ===========');
 
@@ -77,7 +77,7 @@ async function main() {
       name: name,
       email: email,
       password: password,
-    }
+    };
 
     const userConfigData = {
       teamLabel: '企業',
@@ -167,6 +167,20 @@ async function main() {
       },
       name: '太郎さんの好きな食べ物',
       content: `太郎さんの好きな食べ物は、ケーキやアイスなどの甘いものです。`,
+    },
+  });
+
+  console.log('=========== Task ===========');
+  await prisma.task.create({
+    data: {
+      name: 'Wordpressの投稿内容を変更',
+      defaultUrl: '/api/private/tasks/wpPostUpdate',
+      defaultContent: `{
+  "domain": ${process.env.WP_DOMAIN},
+  "postType": "case",
+  "targetDom": "#caseContent",
+  "prompt": "想像でいいので内容を膨らませて1000文字程度のhtmlにしてください。"
+}`,
     },
   });
 }

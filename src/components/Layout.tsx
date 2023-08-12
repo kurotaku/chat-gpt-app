@@ -79,6 +79,11 @@ const Layout: React.FC<Props> = ({
               />
             </Link>
           </li>
+          <li className='mb-4'>
+            <Link href='/tasks'>
+              <Icon className={`icon-todo ${router.pathname.startsWith('/tasks') && 'current'}`} />
+            </Link>
+          </li>
           {accountType == 'COMPANY' && (
             <li className='mb-4'>
               <Link href='/myteam/users'>

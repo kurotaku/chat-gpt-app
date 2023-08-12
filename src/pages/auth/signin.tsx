@@ -53,31 +53,31 @@ const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <div style={{ textAlign: 'center' }}>
-      <form onSubmit={handleSubmit(signInUser)}>
-        <input name='csrfToken' type='hidden' defaultValue={csrfToken} />
-        <div style={{ marginTop: '15px' }}>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          <TextField
-            {...register('email')}
-            type='text'
-            placeholder='Email'
-            className='border-gray-200 focus:outline-none focus:border-cyan-600 mb-2'
-          />
-        </div>
-        <div>
-          <label htmlFor='password'></label>
-          <TextField
-            {...register('password')}
-            type='password'
-            placeholder='Password'
-            className='border-gray-200 focus:outline-none focus:border-cyan-600 mb-2'
-          />
-        </div>
-        <div>
-          <AccentBtn type='submit'>ログイン</AccentBtn>
-        </div>
-      </form>
-    </div>
+        <form onSubmit={handleSubmit(signInUser)}>
+          <input name='csrfToken' type='hidden' defaultValue={csrfToken} />
+          <div style={{ marginTop: '15px' }}>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            <TextField
+              {...register('email')}
+              type='text'
+              placeholder='Email'
+              className='border-gray-200 focus:outline-none focus:border-cyan-600 mb-2'
+            />
+          </div>
+          <div>
+            <label htmlFor='password'></label>
+            <TextField
+              {...register('password')}
+              type='password'
+              placeholder='Password'
+              className='border-gray-200 focus:outline-none focus:border-cyan-600 mb-2'
+            />
+          </div>
+          <div>
+            <AccentBtn type='submit'>ログイン</AccentBtn>
+          </div>
+        </form>
+      </div>
     </>
   );
 };
