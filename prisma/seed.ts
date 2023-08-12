@@ -176,10 +176,10 @@ async function main() {
       name: 'Wordpressの投稿内容を変更',
       defaultUrl: '/api/private/tasks/wpPostUpdate',
       defaultContent: `{
-  "domain": ${process.env.WP_DOMAIN},
-  "postType": "case",
+  "domain": "${process.env.WP_DOMAIN}",
+  "postType": "archived_case",
   "targetDom": "#caseContent",
-  "prompt": "想像でいいので内容を膨らませて1000文字程度のhtmlにしてください。"
+  "prompt": "想像でいいので内容を膨らませて1000文字程度のhtmlにしてください。<div class="layout-1">の内容はそのまま使用してください。"
 }`,
     },
   });
