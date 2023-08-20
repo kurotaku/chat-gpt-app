@@ -178,7 +178,6 @@ async function main() {
       content: `{
   "domain": "${process.env.WP_DOMAIN}",
   "postType": "archived_case",
-  "targetDom": "#caseContent",
   "prompt": "想像でいいので内容を膨らませて1000文字程度のhtmlにしてください。"
 }`,
     },

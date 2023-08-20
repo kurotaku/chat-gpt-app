@@ -21,9 +21,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('body', req.body);
 
         const content = JSON.parse(req.body.content);
-        const { domain, postType, targetDom, prompt } = content;
+        const { domain, postType, prompt } = content;
 
-        if (!domain || !postType || !targetDom || !prompt) {
+        if (!domain || !postType || !prompt) {
           throw new Error('Missing required fields in content');
         }
 
