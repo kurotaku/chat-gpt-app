@@ -10,10 +10,12 @@ import {
   SerializableTeam,
   SerializableTask,
 } from '../../types/types';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
+import { debounce } from 'lodash';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import Layout from '../../components/Layout';
 import { TextField, TextArea } from '../../components/form/Input';
 import { AccentBtn } from '../../components/button/Button';
@@ -39,7 +41,7 @@ type FormInput = {
   content: string;
 };
 
-const delay = 5 * 20 * 1000; // 5 minutes
+const delay = 5 * 30 * 1000; // 5 minutes
 
 const TaskPage: React.FC<Props> = (props: Props) => {
   const { t } = useTranslation('common');
@@ -52,13 +54,30 @@ const TaskPage: React.FC<Props> = (props: Props) => {
   } = useForm<FormInput>({
     mode: 'onChange',
   });
-  const watchFields = watch();
 
-  const [data, setData] = useState<any>(null);
-  const [error, setError] = useState<any>(null);
+  const [url, setUrl] = useState<string>(props.task.url);
+  const [content, setContent] = useState<string>(props.task.content);
   const [status, setStatus] = useState<string>('停止中');
   const [taskLogs, setTaskLogs] = useState<TaskLog[]>([]);
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const debouncedUpdateTask = useCallback(
+    debounce(async (url, content) => {
+      try {
+        await axios.put(
+          `/api/private/tasks/${props.task.id}`,
+          { url, content },
+          { withCredentials: true },
+        );
+        toast.success('変更を更新しました');
+      } catch {
+        toast.error('更新できませんでした');
+      }
+    }, 500),
+    [],
+  );
 
   let current = null;
 
@@ -69,32 +88,41 @@ const TaskPage: React.FC<Props> = (props: Props) => {
       current = start;
     }
 
-    console.log('start', start);
-    console.log('current', current);
-
     try {
       const response = await axios.post(url, { content: content, current: current });
-      console.log(response.data);
-      const currentNumber = current;
+
       setTaskLogs((prevLogs) => [
         ...prevLogs,
         { number: currentNumber, content: response.data.message },
       ]);
+    } catch (error) {
+      let errorMessage = '未知のエラーが発生しました';
 
-      if (current >= start && current < end) {
-        current++;
+      if (error.response) {
+        if (error.response.status === 404) {
+          errorMessage = 'ドメインかIDが無効です';
+        } else if (error.response.status >= 500 && error.response.status < 600) {
+          errorMessage = 'サーバーエラーが発生しました';
+        }
+      } else if (error.request) {
+        errorMessage = 'リクエストは送信されましたが、レスポンスを受け取ることができませんでした';
       } else {
-        stopApiCall();
-        setError(null);
-        return;
+        errorMessage = error.message;
       }
-    } catch (e) {
-      setError(e);
-    } finally {
-      setStatus('待機中');
+
+      setTaskLogs((prevLogs) => [...prevLogs, { number: currentNumber, content: errorMessage }]);
     }
 
-    console.log('callAPI End');
+    const currentNumber = current;
+
+    if (current >= start && current < end) {
+      current++;
+    } else {
+      stopApiCall();
+      return;
+    }
+
+    setStatus('待機中');
   };
 
   const stopApiCall = () => {
@@ -106,15 +134,20 @@ const TaskPage: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    setValue('url', props.task.defaultUrl);
-    setValue('content', props.task.defaultContent);
     return () => {
       stopApiCall();
     };
   }, []);
 
+  useEffect(() => {
+    if (!isFirstRender) {
+      debouncedUpdateTask(url, content);
+    } else {
+      setIsFirstRender(false);
+    }
+  }, [url, content, debouncedUpdateTask]);
+
   const onSubmit = (data: FormInput) => {
-    console.log(data);
     callApi(data.url, data.content, data.start, data.end); // initial fetch
     intervalRef.current = setInterval(
       () => callApi(data.url, data.content, data.start, data.end),
@@ -150,12 +183,21 @@ const TaskPage: React.FC<Props> = (props: Props) => {
 
           <div className='mb-4'>
             <p className='mb-2'>APIURL</p>
-            <TextField {...register('url', { required: true })} />
+            <TextField
+              {...register('url', { required: true })}
+              onChange={(e) => setUrl(e.target.value)}
+              value={url}
+            />
           </div>
 
           <div className='mb-4'>
             <p className='mb-2'>内容</p>
-            <TextArea {...register('content', { required: true })} />
+            <TextArea
+              {...register('content', { required: true })}
+              onChange={(e) => setContent(e.target.value)}
+              value={content}
+              rows={10}
+            />
           </div>
 
           <AccentBtn type='submit' className='disabled:bg-gray-300' disabled={!isValid}>

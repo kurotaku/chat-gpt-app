@@ -174,12 +174,12 @@ async function main() {
   await prisma.task.create({
     data: {
       name: 'Wordpressの投稿内容を変更',
-      defaultUrl: '/api/private/tasks/wpPostUpdate',
-      defaultContent: `{
+      url: '/api/private/tasks/wpPostUpdate',
+      content: `{
   "domain": "${process.env.WP_DOMAIN}",
   "postType": "archived_case",
   "targetDom": "#caseContent",
-  "prompt": "想像でいいので内容を膨らませて1000文字程度のhtmlにしてください。<div class="layout-1">の内容はそのまま使用してください。"
+  "prompt": "想像でいいので内容を膨らませて1000文字程度のhtmlにしてください。"
 }`,
     },
   });
