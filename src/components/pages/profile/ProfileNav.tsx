@@ -31,6 +31,14 @@ const ProfileNav = () => {
           {t('config')}
         </Link>
       </li>
+      <li>
+        <Link
+          className={`${router.pathname === '/profile/password' ? 'current' : ''}`}
+          href='/profile/password'
+        >
+          {t('password')}
+        </Link>
+      </li>
     </PageNav>
   );
 };
