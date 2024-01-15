@@ -10,22 +10,13 @@ import { TextField } from '../../components/form/Input';
 
 var md5 = require('md5');
 
-// POSTリクエスト（サインイン・サインアウトなど）に必要なCSRFトークンを返却する
-export const getServerSideProps = async (context: CtxOrReq | undefined) => {
-  return {
-    props: {
-      title: 'login',
-      csrfToken: await getCsrfToken(context),
-    },
-  };
-};
-
 interface FormInput {
   email?: string;
   password?: string;
 }
 
 const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
+  console.log(csrfToken);
   const router = useRouter();
   const [error, setError] = useState('');
   const { register, handleSubmit } = useForm<FormInput>();
@@ -83,3 +74,20 @@ const Login = ({ csrfToken }: { csrfToken: string | undefined }) => {
 };
 
 export default Login;
+
+// POSTリクエスト（サインイン・サインアウトなど）に必要なCSRFトークンを返却する
+export const getServerSideProps = async (context: CtxOrReq | undefined) => {
+
+  console.log('==========*************');
+
+  const token = await getCsrfToken(context)
+
+  console.log(`Token: ${token}`)
+
+  return {
+    props: {
+      title: 'login',
+      csrfToken: token,
+    },
+  };
+};

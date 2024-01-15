@@ -18,12 +18,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(200).json(tasks);
       break;
     case 'POST':
-      const { name, defaultUrl, defaultContent } = req.body;
+      const { name, url, content } = req.body;
       const task = await prisma.task.create({
         data: {
           name,
-          defaultUrl,
-          defaultContent,
+          url,
+          content,
         },
       });
       res.status(200).json(task);
